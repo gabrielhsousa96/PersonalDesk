@@ -1,0 +1,255 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "number": {
+                  "description": "",
+                  "title": "CodUsuario",
+                  "type": "number",
+                  "x-ms-content-hint": "NUMBER",
+                  "x-ms-dynamically-added": true
+                },
+                "text": {
+                  "description": "",
+                  "title": "Descricao",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_1": {
+                  "description": "",
+                  "title": "Token",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_2": {
+                  "description": "",
+                  "title": "CodClassificacao",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_3": {
+                  "description": "",
+                  "title": "Assunto chamado",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "number",
+                "text",
+                "text_1",
+                "text_2",
+                "text_3"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "CodigoUsuario": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CodigoSolicitante",
+                "type": "integer",
+                "value": "@triggerBody()?['number']"
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "CodigoCategoria": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Categoria",
+                "type": "integer",
+                "value": "@triggerBody()?['number_1']"
+              }
+            ]
+          },
+          "runAfter": {
+            "CodigoUsuario": [
+              "Succeeded"
+            ]
+          }
+        },
+        "DescricaoChamado": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Descrição",
+                "type": "string",
+                "value": "@triggerBody()?['text']"
+              }
+            ]
+          },
+          "runAfter": {
+            "CodigoCategoria": [
+              "Succeeded"
+            ]
+          }
+        },
+        "NumeroChamado": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Chamado",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "DescricaoChamado": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Abre_chamado": {
+          "type": "Http",
+          "inputs": {
+            "uri": "https://api.desk.ms/Chamados",
+            "method": "PUT",
+            "headers": {
+              "Authorization": "@{triggerBody()?['text_1']}"
+            },
+            "body": {
+              "TChamado": {
+                "Chave": "",
+                "Solicitante": "@variables('CodigoSolicitante')",
+                "AutoCategoria": "@variables('Categoria')",
+                "Assunto": "@triggerBody()?['text_3']",
+                "Solicitacao": "000101",
+                "TipoOcorrencia": "000008",
+                "Impacto": "000003",
+                "Urgencia": "000003",
+                "Categoria": "006606",
+                "CategoriaTipo": "000049",
+                "Descricao": "@variables('Descrição')",
+                "Ics": [
+                  ""
+                ]
+              },
+              "TCampoExtra": {
+                "8446": "1.1008.01+-+PESSOAL"
+              },
+              "TIc": {
+                "Chave": {
+                  "411": "on"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "NumeroChamado": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "OrganizaChamado": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('Abre_chamado')",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "TChamado": {
+                  "type": "object",
+                  "properties": {
+                    "Chave": {
+                      "type": "string"
+                    },
+                    "Referencia": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Abre_chamado": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Set_variable": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "Chamado",
+            "value": "@body('OrganizaChamado')?['TChamado']?['Referencia']"
+          },
+          "runAfter": {
+            "OrganizaChamado": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Respond_to_the_agent": {
+          "type": "Response",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "chamado": {
+                  "title": "Chamado",
+                  "description": "Numero do chamado gerado",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "chamado": "@{variables('Chamado')}"
+            }
+          },
+          "runAfter": {
+            "Set_variable": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

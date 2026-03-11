@@ -1,0 +1,287 @@
+<ImportExportXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" OrganizationVersion="9.2.26014.164" OrganizationSchemaType="Standard" CRMServerServiceabilityVersion="9.2.26021.00160">
+  <Entities></Entities>
+  <Roles></Roles>
+  <Workflows>
+    <Workflow WorkflowId="{a38a0ba4-c505-f111-8406-7c1e525b38f7}" Name="Boty - Anexa arquivo V2" Description="When an agent calls the flow and send back a response.">
+      <JsonFileName>/Workflows/Boty-AnexaarquivoV2-A38A0BA4-C505-F111-8406-7C1E525B38F7.json</JsonFileName>
+      <Type>1</Type>
+      <Subprocess>0</Subprocess>
+      <Category>5</Category>
+      <Mode>0</Mode>
+      <Scope>4</Scope>
+      <OnDemand>0</OnDemand>
+      <TriggerOnCreate>0</TriggerOnCreate>
+      <TriggerOnDelete>0</TriggerOnDelete>
+      <AsyncAutodelete>0</AsyncAutodelete>
+      <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <RunAs>1</RunAs>
+      <IsTransacted>1</IsTransacted>
+      <IntroducedVersion>1.0</IntroducedVersion>
+      <IsCustomizable>1</IsCustomizable>
+      <BusinessProcessType>0</BusinessProcessType>
+      <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+      <ModernFlowType>1</ModernFlowType>
+      <PrimaryEntity>none</PrimaryEntity>
+      <LocalizedNames>
+        <LocalizedName languagecode="1046" description="Boty - Anexa arquivo V2" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description languagecode="1046" description="When an agent calls the flow and send back a response." />
+      </Descriptions>
+    </Workflow>
+    <Workflow WorkflowId="{9d171135-e2e7-f011-8544-7c1e526a9a9f}" Name="Boty - Identifica usuario" Description="This flow starts when an email address is provided. It authenticates with an external system, retrieves a token, and uses it to search for a user matching the email. The flow then extracts the user's full name and unique code from the search results. Finally, it responds with the user's full name and code. The process is sequential, ensuring each step completes successfully before moving to the next, and uses loops to handle multiple user records if needed.">
+      <JsonFileName>/Workflows/Boty-Identificausuario-9D171135-E2E7-F011-8544-7C1E526A9A9F.json</JsonFileName>
+      <Type>1</Type>
+      <Subprocess>0</Subprocess>
+      <Category>5</Category>
+      <Mode>0</Mode>
+      <Scope>4</Scope>
+      <OnDemand>0</OnDemand>
+      <TriggerOnCreate>0</TriggerOnCreate>
+      <TriggerOnDelete>0</TriggerOnDelete>
+      <AsyncAutodelete>0</AsyncAutodelete>
+      <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <RunAs>1</RunAs>
+      <IsTransacted>1</IsTransacted>
+      <IntroducedVersion>1.0</IntroducedVersion>
+      <IsCustomizable>1</IsCustomizable>
+      <BusinessProcessType>0</BusinessProcessType>
+      <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+      <ModernFlowType>1</ModernFlowType>
+      <PrimaryEntity>none</PrimaryEntity>
+      <LocalizedNames>
+        <LocalizedName languagecode="1046" description="Boty - Identifica usuario" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description languagecode="1046" description="This flow starts when an email address is provided. It authenticates with an external system, retrieves a token, and uses it to search for a user matching the email. The flow then extracts the user's full name and unique code from the search results. Finally, it responds with the user's full name and code. The process is sequential, ensuring each step completes successfully before moving to the next, and uses loops to handle multiple user records if needed." />
+      </Descriptions>
+    </Workflow>
+    <Workflow WorkflowId="{8575b34a-e7e7-f011-8544-7c1e526a9a9f}" Name="Boty - Gera Token DeskManager" Description="This flow starts when manually triggered. It sends a POST request to an external authentication API to obtain a token. The response is then parsed to extract the authentication token. Finally, the flow returns the token as a response to the requester. Each step depends on the successful completion of the previous one, ensuring the process is sequential and the token is securely retrieved and delivered.">
+      <JsonFileName>/Workflows/Boty-GeraTokenDeskManager-8575B34A-E7E7-F011-8544-7C1E526A9A9F.json</JsonFileName>
+      <Type>1</Type>
+      <Subprocess>0</Subprocess>
+      <Category>5</Category>
+      <Mode>0</Mode>
+      <Scope>4</Scope>
+      <OnDemand>0</OnDemand>
+      <TriggerOnCreate>0</TriggerOnCreate>
+      <TriggerOnDelete>0</TriggerOnDelete>
+      <AsyncAutodelete>0</AsyncAutodelete>
+      <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <RunAs>1</RunAs>
+      <IsTransacted>1</IsTransacted>
+      <IntroducedVersion>1.0</IntroducedVersion>
+      <IsCustomizable>1</IsCustomizable>
+      <BusinessProcessType>0</BusinessProcessType>
+      <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+      <ModernFlowType>1</ModernFlowType>
+      <PrimaryEntity>none</PrimaryEntity>
+      <LocalizedNames>
+        <LocalizedName languagecode="1046" description="Boty - Gera Token DeskManager" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description languagecode="1046" description="This flow starts when manually triggered. It sends a POST request to an external authentication API to obtain a token. The response is then parsed to extract the authentication token. Finally, the flow returns the token as a response to the requester. Each step depends on the successful completion of the previous one, ensuring the process is sequential and the token is securely retrieved and delivered." />
+      </Descriptions>
+    </Workflow>
+    <Workflow WorkflowId="{fd2d7cbf-eae7-f011-8544-7c1e526a9a9f}" Name="Boty - Consulta chamados" Description="This flow starts when it receives a request containing a token and an email. It uses these details to search for support tickets related to the email address. The flow retrieves and parses the five most recent tickets, then gathers the latest interaction for each one. It compiles key information—such as ticket number, creation date, status, responsible person, and the last message—into a formatted summary. Finally, it sends this summary back as a response, providing a quick overview of the user's recent support activity.">
+      <JsonFileName>/Workflows/Boty-Consultachamados-FD2D7CBF-EAE7-F011-8544-7C1E526A9A9F.json</JsonFileName>
+      <Type>1</Type>
+      <Subprocess>0</Subprocess>
+      <Category>5</Category>
+      <Mode>0</Mode>
+      <Scope>4</Scope>
+      <OnDemand>0</OnDemand>
+      <TriggerOnCreate>0</TriggerOnCreate>
+      <TriggerOnDelete>0</TriggerOnDelete>
+      <AsyncAutodelete>0</AsyncAutodelete>
+      <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <RunAs>1</RunAs>
+      <IsTransacted>1</IsTransacted>
+      <IntroducedVersion>1.0</IntroducedVersion>
+      <IsCustomizable>1</IsCustomizable>
+      <BusinessProcessType>0</BusinessProcessType>
+      <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+      <ModernFlowType>1</ModernFlowType>
+      <PrimaryEntity>none</PrimaryEntity>
+      <LocalizedNames>
+        <LocalizedName languagecode="1046" description="Boty - Consulta chamados" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description languagecode="1046" description="This flow starts when it receives a request containing a token and an email. It uses these details to search for support tickets related to the email address. The flow retrieves and parses the five most recent tickets, then gathers the latest interaction for each one. It compiles key information—such as ticket number, creation date, status, responsible person, and the last message—into a formatted summary. Finally, it sends this summary back as a response, providing a quick overview of the user's recent support activity." />
+      </Descriptions>
+    </Workflow>
+    <Workflow WorkflowId="{3862f382-02e8-f011-8544-7c1e526a9a9f}" Name="Boty - Interage no chamado" Description="This flow starts when it receives a request with three pieces of information: a token, a ticket code, and a message. It processes these inputs, then sends an update to a support ticket system using the provided details. After the update, it creates a confirmation message indicating that a new interaction was made on the ticket. Finally, it sends this confirmation back as a response to the original request. The flow ensures each step is completed successfully before moving to the next.">
+      <JsonFileName>/Workflows/Boty-Interagenochamado-3862F382-02E8-F011-8544-7C1E526A9A9F.json</JsonFileName>
+      <Type>1</Type>
+      <Subprocess>0</Subprocess>
+      <Category>5</Category>
+      <Mode>0</Mode>
+      <Scope>4</Scope>
+      <OnDemand>0</OnDemand>
+      <TriggerOnCreate>0</TriggerOnCreate>
+      <TriggerOnDelete>0</TriggerOnDelete>
+      <AsyncAutodelete>0</AsyncAutodelete>
+      <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <RunAs>1</RunAs>
+      <IsTransacted>1</IsTransacted>
+      <IntroducedVersion>1.0</IntroducedVersion>
+      <IsCustomizable>1</IsCustomizable>
+      <BusinessProcessType>0</BusinessProcessType>
+      <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+      <ModernFlowType>1</ModernFlowType>
+      <PrimaryEntity>none</PrimaryEntity>
+      <LocalizedNames>
+        <LocalizedName languagecode="1046" description="Boty - Interage no chamado" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description languagecode="1046" description="This flow starts when it receives a request with three pieces of information: a token, a ticket code, and a message. It processes these inputs, then sends an update to a support ticket system using the provided details. After the update, it creates a confirmation message indicating that a new interaction was made on the ticket. Finally, it sends this confirmation back as a response to the original request. The flow ensures each step is completed successfully before moving to the next." />
+      </Descriptions>
+    </Workflow>
+    <Workflow WorkflowId="{c06ec0ad-6fea-f011-8544-7c1e526a9a9f}" Name="Boty - Classifica chamado" Description="This flow starts when it receives a request with two text inputs. It uses one input as a token and the other as a search term to look up categories from an external API. Based on the number of categories found, it sets the status and response: if none are found, it returns a default message; if one is found, it returns the exact match; if multiple are found, it loops through them and returns a list. The flow then responds with the appropriate category, subject, status, and, if needed, a detailed list.">
+      <JsonFileName>/Workflows/Boty-Classificachamado-C06EC0AD-6FEA-F011-8544-7C1E526A9A9F.json</JsonFileName>
+      <Type>1</Type>
+      <Subprocess>0</Subprocess>
+      <Category>5</Category>
+      <Mode>0</Mode>
+      <Scope>4</Scope>
+      <OnDemand>0</OnDemand>
+      <TriggerOnCreate>0</TriggerOnCreate>
+      <TriggerOnDelete>0</TriggerOnDelete>
+      <AsyncAutodelete>0</AsyncAutodelete>
+      <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <RunAs>1</RunAs>
+      <IsTransacted>1</IsTransacted>
+      <IntroducedVersion>1.0</IntroducedVersion>
+      <IsCustomizable>1</IsCustomizable>
+      <BusinessProcessType>0</BusinessProcessType>
+      <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+      <ModernFlowType>1</ModernFlowType>
+      <PrimaryEntity>none</PrimaryEntity>
+      <LocalizedNames>
+        <LocalizedName languagecode="1046" description="Boty - Classifica chamado" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description languagecode="1046" description="This flow starts when it receives a request with two text inputs. It uses one input as a token and the other as a search term to look up categories from an external API. Based on the number of categories found, it sets the status and response: if none are found, it returns a default message; if one is found, it returns the exact match; if multiple are found, it loops through them and returns a list. The flow then responds with the appropriate category, subject, status, and, if needed, a detailed list." />
+      </Descriptions>
+    </Workflow>
+    <Workflow WorkflowId="{864a3335-bcec-f011-8407-6045bdd61acf}" Name="Boty - Consulta chamados por solicitante" Description="This flow starts when it receives a manual trigger with user input. It stores search criteria, then sends a POST request to an external API to retrieve ticket data. The response is parsed, and for each ticket, details like ticket number, creation date, status, and responsible operator are formatted into a summary string. After processing all tickets, the flow returns the compiled summary as a response to the requester. The flow ensures each step only runs after the previous one succeeds, maintaining a logical sequence for data handling and output.">
+      <JsonFileName>/Workflows/Boty-Consultachamadosporsolicitante-864A3335-BCEC-F011-8407-6045BDD61ACF.json</JsonFileName>
+      <Type>1</Type>
+      <Subprocess>0</Subprocess>
+      <Category>5</Category>
+      <Mode>0</Mode>
+      <Scope>4</Scope>
+      <OnDemand>0</OnDemand>
+      <TriggerOnCreate>0</TriggerOnCreate>
+      <TriggerOnDelete>0</TriggerOnDelete>
+      <AsyncAutodelete>0</AsyncAutodelete>
+      <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <RunAs>1</RunAs>
+      <IsTransacted>1</IsTransacted>
+      <IntroducedVersion>1.0</IntroducedVersion>
+      <IsCustomizable>1</IsCustomizable>
+      <BusinessProcessType>0</BusinessProcessType>
+      <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+      <ModernFlowType>1</ModernFlowType>
+      <PrimaryEntity>none</PrimaryEntity>
+      <LocalizedNames>
+        <LocalizedName languagecode="1046" description="Boty - Consulta chamados por solicitante" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description languagecode="1046" description="This flow starts when it receives a manual trigger with user input. It stores search criteria, then sends a POST request to an external API to retrieve ticket data. The response is parsed, and for each ticket, details like ticket number, creation date, status, and responsible operator are formatted into a summary string. After processing all tickets, the flow returns the compiled summary as a response to the requester. The flow ensures each step only runs after the previous one succeeds, maintaining a logical sequence for data handling and output." />
+      </Descriptions>
+    </Workflow>
+    <Workflow WorkflowId="{43c9d254-90ec-f011-8407-6045bdd61acf}" Name="Boty - Abre Chamado" Description="This flow starts when a manual trigger receives user input with four required fields. It then processes and stores these inputs step-by-step, preparing data for an API call to create a support ticket. After the ticket is created, the flow organizes the response, extracts the ticket reference, and sends it back to the requester as confirmation. Each step depends on the successful completion of the previous one, ensuring a logical and reliable sequence for ticket creation and response delivery.">
+      <JsonFileName>/Workflows/Boty-AbreChamado-43C9D254-90EC-F011-8407-6045BDD61ACF.json</JsonFileName>
+      <Type>1</Type>
+      <Subprocess>0</Subprocess>
+      <Category>5</Category>
+      <Mode>0</Mode>
+      <Scope>4</Scope>
+      <OnDemand>0</OnDemand>
+      <TriggerOnCreate>0</TriggerOnCreate>
+      <TriggerOnDelete>0</TriggerOnDelete>
+      <AsyncAutodelete>0</AsyncAutodelete>
+      <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <RunAs>1</RunAs>
+      <IsTransacted>1</IsTransacted>
+      <IntroducedVersion>1.0</IntroducedVersion>
+      <IsCustomizable>1</IsCustomizable>
+      <BusinessProcessType>0</BusinessProcessType>
+      <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+      <ModernFlowType>1</ModernFlowType>
+      <PrimaryEntity>none</PrimaryEntity>
+      <LocalizedNames>
+        <LocalizedName languagecode="1046" description="Boty - Abre Chamado" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description languagecode="1046" description="This flow starts when a manual trigger receives user input with four required fields. It then processes and stores these inputs step-by-step, preparing data for an API call to create a support ticket. After the ticket is created, the flow organizes the response, extracts the ticket reference, and sends it back to the requester as confirmation. Each step depends on the successful completion of the previous one, ensuring a logical and reliable sequence for ticket creation and response delivery." />
+      </Descriptions>
+    </Workflow>
+    <Workflow WorkflowId="{ee28e38d-b89c-8af0-8552-f01fe55c56e6}" Name="Boty - Cria solicitante" Description="This flow starts when it receives a request containing a token, first name, last name, and email. It then sends this information to an external user management API to create or update a user. After receiving a response, it processes the returned user ID and sends it back to the requester as confirmation. The flow ensures each step only runs after the previous one succeeds, maintaining a clear and reliable sequence for user creation and response.">
+      <JsonFileName>/Workflows/Boty-Criasolicitante-EE28E38D-B89C-8AF0-8552-F01FE55C56E6.json</JsonFileName>
+      <Type>1</Type>
+      <Subprocess>0</Subprocess>
+      <Category>5</Category>
+      <Mode>0</Mode>
+      <Scope>4</Scope>
+      <OnDemand>0</OnDemand>
+      <TriggerOnCreate>0</TriggerOnCreate>
+      <TriggerOnDelete>0</TriggerOnDelete>
+      <AsyncAutodelete>0</AsyncAutodelete>
+      <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <RunAs>1</RunAs>
+      <IsTransacted>1</IsTransacted>
+      <IntroducedVersion>1.0</IntroducedVersion>
+      <IsCustomizable>1</IsCustomizable>
+      <BusinessProcessType>0</BusinessProcessType>
+      <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+      <ModernFlowType>1</ModernFlowType>
+      <PrimaryEntity>none</PrimaryEntity>
+      <LocalizedNames>
+        <LocalizedName languagecode="1046" description="Boty - Cria solicitante" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description languagecode="1046" description="This flow starts when it receives a request containing a token, first name, last name, and email. It then sends this information to an external user management API to create or update a user. After receiving a response, it processes the returned user ID and sends it back to the requester as confirmation. The flow ensures each step only runs after the previous one succeeds, maintaining a clear and reliable sequence for user creation and response." />
+      </Descriptions>
+    </Workflow>
+  </Workflows>
+  <FieldSecurityProfiles></FieldSecurityProfiles>
+  <Templates />
+  <EntityMaps />
+  <EntityRelationships />
+  <OrganizationSettings />
+  <optionsets />
+  <CustomControls />
+  <EntityDataProviders />
+  <connectionreferences>
+    <connectionreference connectionreferencelogicalname="crdb8_teste.cr.FATVMdU-">
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_onedriveforbusiness</connectorid>
+      <iscustomizable>0</iscustomizable>
+      <promptingbehavior>0</promptingbehavior>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+  </connectionreferences>
+  <Languages>
+    <Language>1046</Language>
+  </Languages>
+</ImportExportXml>

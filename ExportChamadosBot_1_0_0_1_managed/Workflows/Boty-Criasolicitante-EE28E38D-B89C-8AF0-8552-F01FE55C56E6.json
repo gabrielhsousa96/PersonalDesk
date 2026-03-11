@@ -1,0 +1,150 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "description": "",
+                  "title": "Token",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_1": {
+                  "description": "",
+                  "title": "Nome",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_2": {
+                  "description": "",
+                  "title": "Sobrenome",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "email": {
+                  "description": "",
+                  "format": "email",
+                  "title": "Email",
+                  "type": "string",
+                  "x-ms-content-hint": "EMAIL",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "text",
+                "text_1",
+                "text_2",
+                "email"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "HTTP": {
+          "runAfter": {},
+          "type": "Http",
+          "inputs": {
+            "uri": "https://api.desk.ms/Usuarios",
+            "method": "PUT",
+            "headers": {
+              "Authorization": "@{triggerBody()?['text']}"
+            },
+            "body": {
+              "TUsuario": {
+                "Chave": "",
+                "CodCliente": "2",
+                "Email": "@triggerBody()?['email']",
+                "Senha": "Emccamp@123",
+                "ConfirmaSenha": "Emccamp@123",
+                "Nome": "@triggerBody()?['text_1']",
+                "Sobrenome": "@triggerBody()?['text_2']",
+                "Prioridade": "3",
+                "LoginAd": "Login Ad",
+                "Idioma": "pt_br",
+                "SatisfacaoEmailAtivo": "on",
+                "SatisfacaoObrigAtivo": "off",
+                "MudarSenhaAtivo": "off",
+                "AlteradPessoaisAtivo": "on",
+                "MicrosoftAtivo": "on",
+                "BoasVindas": "off"
+              }
+            }
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "Parse_JSON": {
+          "runAfter": {
+            "HTTP": [
+              "Succeeded"
+            ]
+          },
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('HTTP')",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        },
+        "Respond_to_the_agent": {
+          "runAfter": {
+            "Parse_JSON": [
+              "Succeeded"
+            ]
+          },
+          "type": "Response",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "codsolicitante": {
+                  "title": "CodSolicitante",
+                  "description": "",
+                  "type": "number",
+                  "x-ms-content-hint": "NUMBER",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "codsolicitante": "@body('Parse_JSON')"
+            }
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

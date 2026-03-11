@@ -1,0 +1,21 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    displayName: Greeting
+    includeInOnSelectIntent: false
+    triggerQueries:
+      - Good afternoon
+      - Good morning
+      - Hello
+      - Hey
+      - Hi
+
+  actions:
+    - kind: BeginDialog
+      id: 3zlFQU
+      dialog: crdb8_deskManagerItSupportAgent.topic.ConversationStart
+
+    - kind: CancelAllDialogs
+      id: cancelAllDialogs_01At22

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#0f172a",
+                        "slate-card": "#1e293b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Configurações - Sistema de Chamados</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-background-light dark:bg-background-dark border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center p-4 justify-between max-w-md mx-auto w-full">
+<button class="text-slate-600 dark:text-slate-400 flex items-center justify-center p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold flex-1 text-center pr-10">Configurações</h1>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 max-w-md mx-auto w-full p-4 space-y-2">
+<!-- Section: Ticket Management -->
+<div class="mb-6">
+<p class="px-2 mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Gestão de Chamados</p>
+<div class="space-y-1">
+<a class="flex items-center gap-4 bg-white dark:bg-slate-card p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group" href="/types">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0 size-10">
+<span class="material-symbols-outlined">label</span>
+</div>
+<p class="text-base font-medium flex-1 truncate">Gestão de Tipos de Chamados</p>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">chevron_right</span>
+</a>
+<a class="flex items-center gap-4 bg-white dark:bg-slate-card p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group" href="/categories">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0 size-10">
+<span class="material-symbols-outlined">layers</span>
+</div>
+<p class="text-base font-medium flex-1 truncate">Gestão de Categorias</p>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">chevron_right</span>
+</a>
+
+</div>
+</div>
+<!-- Section: System & Support -->
+<div class="mb-6">
+<p class="px-2 mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Sistema e Suporte</p>
+<div class="space-y-1">
+<a class="flex items-center gap-4 bg-white dark:bg-slate-card p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group" href="/users">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0 size-10">
+<span class="material-symbols-outlined">group</span>
+</div>
+<p class="text-base font-medium flex-1 truncate">Gestão de Usuários</p>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">chevron_right</span>
+</a>
+<a class="flex items-center gap-4 bg-white dark:bg-slate-card p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group" href="/api_management">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0 size-10">
+<span class="material-symbols-outlined">key</span>
+</div>
+<p class="text-base font-medium flex-1 truncate">Gestão de API</p>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">chevron_right</span>
+</a>
+
+<a class="flex items-center gap-4 bg-white dark:bg-slate-card p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group" href="#">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0 size-10">
+<span class="material-symbols-outlined">support_agent</span>
+</div>
+<p class="text-base font-medium flex-1 truncate">Fale Conosco</p>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">chevron_right</span>
+</a>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<!-- Bottom Navigation -->
+    <nav class="shrink-0 relative w-full border-t border-slate-200 dark:border-slate-800 bg-[#0a1511] px-4 pb-3 pt-2 safe-area-bottom">
+        <div class="flex max-w-2xl mx-auto gap-2">
+            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400"
+                href="/dashboard">
+                <span class="material-symbols-outlined">confirmation_number</span>
+                <p class="text-[10px] font-medium leading-normal tracking-wide">Tickets</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400"
+                href="/users" id="navUsersBtn" style="display:flex;">
+                <span class="material-symbols-outlined">format_list_bulleted</span>
+                <p class="text-[10px] font-medium leading-normal tracking-wide">Usuários</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400" href="/reports">
+                <span class="material-symbols-outlined">bar_chart</span>
+                <p class="text-[10px] font-medium leading-normal tracking-wide">Relatórios</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400" href="/profile">
+                <span class="material-symbols-outlined">person</span>
+                <p class="text-[10px] font-medium leading-normal tracking-wide">Perfil</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="/config" id="navConfigBtn" style="display:flex;">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">settings</span>
+                <p class="text-[10px] font-medium leading-normal tracking-wide">Ajustes</p>
+            </a>
+        </div>
+    </nav>
+    <script src="/static/app.js"></script>
+</body></html>

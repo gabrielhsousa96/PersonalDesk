@@ -1,0 +1,91 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent: {}
+  actions:
+    - kind: InvokeFlowAction
+      id: invokeFlowAction_aWmGjo
+      input: {}
+      output:
+        binding:
+          token: Topic.Token
+
+      flowId: 8575b34a-e7e7-f011-8544-7c1e526a9a9f
+
+    - kind: SetVariable
+      id: setVariable_J9WLsb
+      variable: Global.Descricao
+      value: =Blank()
+
+    - kind: Question
+      id: question_Lok0Hn
+      interruptionPolicy:
+        allowInterruption: true
+
+      alwaysPrompt: true
+      variable: Global.Descricao
+      prompt: |-
+        **Antes de nos enviar o arquivo... 📎**  
+
+
+        Por favor, digite uma **breve descrição** para este anexo para que eu possa registrá-lo no chamado.
+        **(Isso ajuda muito a equipe técnica a identificar o problema)**
+      entity:
+        kind: StringPrebuiltEntity
+        sensitivityLevel: None
+
+    - kind: SetVariable
+      id: setVariable_yUWhvI
+      variable: Global.Descricao
+      value: =Blank()
+
+    - kind: Question
+      id: question_IZ8tXn
+      interruptionPolicy:
+        allowInterruption: true
+
+      alwaysPrompt: true
+      variable: Topic.ArquivoAnexo
+      prompt: |-
+        **Hora de enviar o arquivo! 📎**
+
+        Por favor, nos envie todos os arquivos e fotos que voce quer anexar ao chamado
+        **(Marque todos os anexos e envie todos de uma vez,)**
+      entity: FilePrebuiltEntity
+
+    - kind: ConditionGroup
+      id: conditionGroup_Cq0mam
+      conditions:
+        - id: conditionItem_6JcLmX
+          condition: =!IsEmpty(System.Activity.Attachments)
+          actions:
+            - kind: InvokeFlowAction
+              id: invokeFlowAction_piB122
+              input:
+                binding:
+                  text: =Topic.Token
+                  text_1: =Global.Codigodochamado
+                  text_2: =Global.Descricao
+                  text_3: =Concatenate(First(System.Activity.Attachments).Content, "")
+                  text_4: =First(System.Activity.Attachments).Name
+                  text_5: =First(System.Activity.Attachments).ContentType
+
+              output:
+                binding:
+                  retorno: Topic.Retorno
+
+              flowId: a38a0ba4-c505-f111-8406-7c1e525b38f7
+
+            - kind: SendActivity
+              id: sendActivity_tt2xVW
+              activity: |-
+                Tudo pronto! Seus arquivos foram anexados ao chamado com sucesso. 🚀
+                Agora, o que você gostaria de fazer? Estou te levando de volta ao **Menu Principal**.
+
+    - kind: BeginDialog
+      id: J68aCc
+      dialog: crdb8_deskManagerItSupportAgent.topic.MenuPrincipal
+
+inputType: {}
+outputType: {}

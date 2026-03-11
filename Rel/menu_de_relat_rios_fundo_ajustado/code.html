@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8b5cf6",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#0f1420",
+                        "slate-custom": {
+                            900: "#0f1420",
+                            800: "#1e293b",
+                            700: "#334155",
+                            400: "#94a3b8",
+                            100: "#f1f5f9"
+                        }
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<div class="relative flex h-full min-h-screen w-full flex-col bg-background-light dark:bg-background-dark overflow-x-hidden">
+<header class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between">
+<button class="text-slate-900 dark:text-slate-100 flex size-10 shrink-0 items-center justify-center rounded-lg hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Relatórios</h2>
+</header>
+<main class="flex-1 overflow-y-auto">
+<div class="px-4 pt-6 pb-2">
+<h3 class="text-slate-900 dark:text-slate-100 tracking-tight text-2xl font-bold leading-tight">Relatórios de Help Desk</h3>
+<p class="text-slate-custom-400 text-base font-normal leading-normal pt-2">Acompanhe o desempenho e as métricas da sua equipe em tempo real.</p>
+</div>
+<div class="mt-6 flex flex-col gap-1">
+<div class="flex items-center gap-4 px-4 min-h-[80px] py-3 justify-between hover:bg-slate-custom-800/30 cursor-pointer transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-primary flex items-center justify-center rounded-xl bg-primary/10 shrink-0 size-12">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-slate-900 dark:text-slate-100 text-base font-semibold leading-normal line-clamp-1">Relatório de Produtividade</p>
+<p class="text-slate-custom-400 text-sm font-normal leading-normal line-clamp-1">Visão geral da eficiência da equipe</p>
+</div>
+</div>
+<div class="shrink-0">
+<span class="material-symbols-outlined text-slate-custom-400">chevron_right</span>
+</div>
+</div>
+<div class="flex items-center gap-4 px-4 min-h-[80px] py-3 justify-between hover:bg-slate-custom-800/30 cursor-pointer transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-primary flex items-center justify-center rounded-xl bg-primary/10 shrink-0 size-12">
+<span class="material-symbols-outlined">category</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-slate-900 dark:text-slate-100 text-base font-semibold leading-normal line-clamp-1">Chamados por Categoria</p>
+<p class="text-slate-custom-400 text-sm font-normal leading-normal line-clamp-1">Distribuição de tickets por tipo</p>
+</div>
+</div>
+<div class="shrink-0">
+<span class="material-symbols-outlined text-slate-custom-400">chevron_right</span>
+</div>
+</div>
+<div class="flex items-center gap-4 px-4 min-h-[80px] py-3 justify-between hover:bg-slate-custom-800/30 cursor-pointer transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-primary flex items-center justify-center rounded-xl bg-primary/10 shrink-0 size-12">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-slate-900 dark:text-slate-100 text-base font-semibold leading-normal line-clamp-1">Performance de Operadores</p>
+<p class="text-slate-custom-400 text-sm font-normal leading-normal line-clamp-1">Métricas individuais de cada técnico</p>
+</div>
+</div>
+<div class="shrink-0">
+<span class="material-symbols-outlined text-slate-custom-400">chevron_right</span>
+</div>
+</div>
+<div class="flex items-center gap-4 px-4 min-h-[80px] py-3 justify-between hover:bg-slate-custom-800/30 cursor-pointer transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-primary flex items-center justify-center rounded-xl bg-primary/10 shrink-0 size-12">
+<span class="material-symbols-outlined">avg_time</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-slate-900 dark:text-slate-100 text-base font-semibold leading-normal line-clamp-1">Tempo Médio de Resposta</p>
+<p class="text-slate-custom-400 text-sm font-normal leading-normal line-clamp-1">SLA e agilidade no atendimento</p>
+</div>
+</div>
+<div class="shrink-0">
+<span class="material-symbols-outlined text-slate-custom-400">chevron_right</span>
+</div>
+</div>
+</div>
+</main>
+<nav class="flex gap-2 border-t border-slate-custom-800 bg-background-light dark:bg-slate-custom-900 px-4 pb-6 pt-2 safe-area-bottom">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-custom-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-xs font-medium leading-normal">Início</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-custom-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+<p class="text-xs font-medium leading-normal">Chamados</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined active-icon">bar_chart</span>
+<p class="text-xs font-medium leading-normal">Relatórios</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-custom-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-xs font-medium leading-normal">Ajustes</p>
+</a>
+</nav>
+</div>
+</body></html>

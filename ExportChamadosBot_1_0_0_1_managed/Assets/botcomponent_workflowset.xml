@@ -1,0 +1,53 @@
+<botcomponent_workflowset>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.Abertura-Classificaodochamado" workflowid.workflowid="8575b34a-e7e7-f011-8544-7c1e526a9a9f">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.Abertura-Classificaodochamado" workflowid.workflowid="c06ec0ad-6fea-f011-8544-7c1e526a9a9f">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.Boty-Abrechamado" workflowid.workflowid="43c9d254-90ec-f011-8407-6045bdd61acf">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.Boty-Abrechamado" workflowid.workflowid="8575b34a-e7e7-f011-8544-7c1e526a9a9f">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.Boty-Abrechamado" workflowid.workflowid="fd2d7cbf-eae7-f011-8544-7c1e526a9a9f">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.Boty-Anexaarquivo" workflowid.workflowid="8575b34a-e7e7-f011-8544-7c1e526a9a9f">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.Boty-Anexaarquivo" workflowid.workflowid="a38a0ba4-c505-f111-8406-7c1e525b38f7">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.Consultarumchamado" workflowid.workflowid="8575b34a-e7e7-f011-8544-7c1e526a9a9f">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.Consultarumchamado" workflowid.workflowid="864a3335-bcec-f011-8407-6045bdd61acf">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.Consultarumchamado" workflowid.workflowid="fd2d7cbf-eae7-f011-8544-7c1e526a9a9f">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.ConversationStart" workflowid.workflowid="8575b34a-e7e7-f011-8544-7c1e526a9a9f">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.ConversationStart" workflowid.workflowid="9d171135-e2e7-f011-8544-7c1e526a9a9f">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.ConversationStart" workflowid.workflowid="ee28e38d-b89c-8af0-8552-f01fe55c56e6">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.Interagenochamado" workflowid.workflowid="3862f382-02e8-f011-8544-7c1e526a9a9f">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.Interagenochamado" workflowid.workflowid="8575b34a-e7e7-f011-8544-7c1e526a9a9f">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.Interagenochamado" workflowid.workflowid="fd2d7cbf-eae7-f011-8544-7c1e526a9a9f">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+  <botcomponent_workflow botcomponentid.schemaname="crdb8_deskManagerItSupportAgent.topic.MenuPrincipal" workflowid.workflowid="8575b34a-e7e7-f011-8544-7c1e526a9a9f">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+</botcomponent_workflowset>

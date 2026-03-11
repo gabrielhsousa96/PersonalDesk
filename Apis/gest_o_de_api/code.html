@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#10221c",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Gestão de API - Help Desk</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-background-light dark:bg-background-dark border-b border-primary/10 px-4 py-4">
+<div class="flex items-center justify-between max-w-2xl mx-auto w-full">
+<div class="flex items-center gap-3">
+<button class="p-2 hover:bg-primary/10 rounded-full transition-colors">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-100">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold tracking-tight">Gestão de API</h1>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-background-dark px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-lg shadow-primary/20">
+                Novo Token
+            </button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 max-w-2xl mx-auto w-full p-4 space-y-6">
+<!-- Section Info -->
+<section>
+<h2 class="text-primary text-sm font-semibold uppercase tracking-wider mb-2">Tokens e Endpoints</h2>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Gerencie suas chaves de acesso e visualize os endpoints disponíveis para integração com o sistema de help desk.</p>
+</section>
+<!-- API List -->
+<div class="space-y-3">
+<!-- Item: Autenticação -->
+<div class="flex items-center gap-4 p-4 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl hover:border-primary/30 transition-colors group">
+<div class="flex items-center justify-center w-12 h-12 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">lock</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h3 class="font-semibold text-base truncate">Autenticação</h3>
+<span class="px-2 py-0.5 rounded bg-primary/20 text-primary text-[10px] font-bold uppercase">POST</span>
+</div>
+<p class="text-primary/70 text-xs font-mono truncate">v1/auth/login</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Geração de tokens JWT para sessões.</p>
+</div>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary/10 rounded-lg text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 hover:bg-red-500/10 rounded-lg text-slate-400 hover:text-red-500">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Item: Criar Chamado -->
+<div class="flex items-center gap-4 p-4 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl hover:border-primary/30 transition-colors group">
+<div class="flex items-center justify-center w-12 h-12 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">add_circle</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h3 class="font-semibold text-base truncate">Criar Chamado</h3>
+<span class="px-2 py-0.5 rounded bg-primary/20 text-primary text-[10px] font-bold uppercase">POST</span>
+</div>
+<p class="text-primary/70 text-xs font-mono truncate">v1/tickets/create</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Abertura de novos tickets de suporte.</p>
+</div>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary/10 rounded-lg text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 hover:bg-red-500/10 rounded-lg text-slate-400 hover:text-red-500">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Item: Consultar Status -->
+<div class="flex items-center gap-4 p-4 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl hover:border-primary/30 transition-colors group">
+<div class="flex items-center justify-center w-12 h-12 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">query_stats</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h3 class="font-semibold text-base truncate">Consultar Status</h3>
+<span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px] font-bold uppercase">GET</span>
+</div>
+<p class="text-primary/70 text-xs font-mono truncate">v1/tickets/:id/status</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Verificação em tempo real do progresso.</p>
+</div>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary/10 rounded-lg text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 hover:bg-red-500/10 rounded-lg text-slate-400 hover:text-red-500">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Item: Listar Clientes -->
+<div class="flex items-center gap-4 p-4 bg-white dark:bg-primary/5 border border-slate-200 dark:border-primary/10 rounded-xl hover:border-primary/30 transition-colors group">
+<div class="flex items-center justify-center w-12 h-12 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">group</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h3 class="font-semibold text-base truncate">Listar Clientes</h3>
+<span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px] font-bold uppercase">GET</span>
+</div>
+<p class="text-primary/70 text-xs font-mono truncate">v1/customers/all</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Retorna a base completa de usuários.</p>
+</div>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary/10 rounded-lg text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 hover:bg-red-500/10 rounded-lg text-slate-400 hover:text-red-500">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Documentation Card -->
+<div class="mt-8 p-6 rounded-2xl bg-gradient-to-br from-primary/20 to-transparent border border-primary/20">
+<h4 class="font-bold text-lg mb-2">Precisa de ajuda?</h4>
+<p class="text-slate-400 text-sm mb-4">Consulte nossa documentação completa para entender os limites de taxa e formatos de payload.</p>
+<a class="inline-flex items-center gap-2 text-primary font-semibold hover:underline" href="#">
+                Ver Documentação da API
+                <span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="sticky bottom-0 bg-white dark:bg-background-dark border-t border-slate-200 dark:border-primary/10 px-6 py-3">
+<div class="max-w-2xl mx-auto flex justify-between items-center">
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-medium">Dashboard</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+<span class="text-[10px] font-medium">Chamados</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-[10px] font-medium">Relatórios</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined font-variation-fill">settings</span>
+<span class="text-[10px] font-bold">Ajustes</span>
+</a>
+</div>
+</nav>
+<style>
+        .font-variation-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</body></html>

@@ -1,0 +1,430 @@
+kind: AdaptiveDialog
+modelDescription: Use este tópico para realizar uma triagem ou busca no catálogo de serviços. Utilize quando a solicitação do usuário for vaga e precisar ser categorizada antes de abrir o chamado, ou para buscar a categoria correta baseada no relato do problema.
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent: {}
+  actions:
+    - kind: InvokeFlowAction
+      id: invokeFlowAction_c7MJ21
+      input: {}
+      output:
+        binding:
+          token: Topic.Token
+
+      flowId: 8575b34a-e7e7-f011-8544-7c1e526a9a9f
+
+    - kind: Question
+      id: question_AiZP0a
+      interruptionPolicy:
+        allowInterruption: true
+
+      alwaysPrompt: true
+      variable: init:Topic.Equipe
+      prompt: |-
+        Para começar, vamos direcionar seu caso para a equipe certa. 🎯 
+
+        O problema está relacionado a **Infraestrutura** (computadores, internet) ou **Sistemas** (softwares, ERP)?
+      entity:
+        kind: EmbeddedEntity
+        definition:
+          kind: ClosedListEntity
+          items:
+            - id: Equipe de Infraestrutura
+              displayName: Equipe de Infraestrutura
+
+            - id: Equipe de Sistemas
+              displayName: Equipe de Sistemas
+
+            - id: Finalizar atendimento
+              displayName: Finalizar atendimento
+
+        displayName: EmbeddedEntity-otncne
+
+    - kind: ConditionGroup
+      id: conditionGroup_qCAyUf
+      conditions:
+        - id: conditionItem_K9Ya2K
+          condition: =Topic.Equipe = 'crdb8_deskManagerItSupportAgent.topic.Abertura-Classificaodochamado.main.question_AiZP0a'.'Equipe de Infraestrutura'
+          actions:
+            - kind: Question
+              id: question_uP5Mh4
+              interruptionPolicy:
+                allowInterruption: true
+
+              alwaysPrompt: true
+              variable: init:Topic.SolicitacaoInfra
+              prompt: Entendi. Qual destas opções tem mais a ver com o que você precisa agora? 👇
+              entity:
+                kind: ClosedListEntityReference
+                entityId: crdb8_deskManagerItSupportAgent.entity.SolicitaesInfra
+                selectedItems:
+                  - 3OfTyq
+                  - VpjBv0
+                  - g5kbuw
+                  - qPsm1r
+                  - rRUpp5
+                  - rUodSC
+                  - e8zyw7
+                  - t1QCzG
+                  - jIEZ9S
+                  - FAvoZk
+                  - rln6lD
+                  - 8d8nMd
+                  - KYXEHs
+                  - mvVFFh
+                  - 4yuH3q
+
+            - kind: InvokeFlowAction
+              id: invokeFlowAction_UjRSQQ
+              input:
+                binding:
+                  text: =Topic.Token
+                  text_1: =Concatenate("Infra - ",Topic.SolicitacaoInfra)
+
+              output:
+                binding:
+                  assunto: Global.Assunto
+                  codigo: Global.Codigo
+                  resposta: Global.Resposta
+                  status: Global.Status
+
+              flowId: c06ec0ad-6fea-f011-8544-7c1e526a9a9f
+
+        - id: conditionItem_Yry0az
+          condition: =Topic.Equipe = 'crdb8_deskManagerItSupportAgent.topic.Abertura-Classificaodochamado.main.question_AiZP0a'.'Equipe de Sistemas'
+          actions:
+            - kind: Question
+              id: question_Xmmtgb
+              interruptionPolicy:
+                allowInterruption: true
+
+              alwaysPrompt: true
+              variable: Topic.Primeira_Validacao_sis
+              prompt: Entendi. Qual destas opções tem mais a ver com o que você precisa agora? 👇
+              entity:
+                kind: ClosedListEntityReference
+                sensitivityLevel: None
+                entityId: crdb8_deskManagerItSupportAgent.entity.CategoriasSistemas
+                selectedItems:
+                  - 0qh8TA
+                  - Yy5YZT
+                  - CSI37g
+                  - ucoMaH
+                  - QSxqYo
+                  - RDLmJD
+                  - II62pb
+                  - 3su5CF
+                  - zxHQeW
+                  - fmATC8
+                  - oh3aM6
+
+            - kind: ConditionGroup
+              id: conditionGroup_SVFwjT
+              conditions:
+                - id: conditionItem_RqGEID
+                  condition: =Topic.Primeira_Validacao_sis <> 'crdb8_deskManagerItSupportAgent.entity.CategoriasSistemas'.RDLmJD
+                  actions:
+                    - kind: SetMultipleVariables
+                      id: setVariable_7wlCsb
+                      assignments:
+                        - variable: Global.Codigo
+                          value: =Blank()
+
+                        - variable: Global.Assunto
+                          value: =Blank()
+
+                        - variable: Global.Status
+                          value: =Blank()
+
+                        - variable: Global.Resposta
+                          value: =Blank()
+
+                    - kind: InvokeFlowAction
+                      id: invokeFlowAction_WfUWe7
+                      input:
+                        binding:
+                          text: =Topic.Token
+                          text_1: =Concatenate("Sistemas - ",Topic.Primeira_Validacao_sis)
+
+                      output:
+                        binding:
+                          assunto: Global.Assunto
+                          codigo: Global.Codigo
+                          resposta: Global.Resposta
+                          status: Global.Status
+
+                      flowId: c06ec0ad-6fea-f011-8544-7c1e526a9a9f
+
+              elseActions:
+                - kind: Question
+                  id: question_Q164ox
+                  interruptionPolicy:
+                    allowInterruption: true
+
+                  variable: init:Topic.Validacao_RM
+                  prompt: Sobre qual modulo do RM voce quer falar?
+                  entity:
+                    kind: ClosedListEntityReference
+                    entityId: crdb8_deskManagerItSupportAgent.entity.Validao_RM
+                    selectedItems:
+                      - Xn8LZ3
+                      - FHHO6O
+                      - BTWOjW
+                      - d8ms8d
+                      - zba7lJ
+                      - Opz5IX
+                      - JDlbOo
+                      - Sp9HD0
+                      - IUyNgv
+                      - Jt5vGT
+                      - xOFZ3Z
+
+                - kind: SetMultipleVariables
+                  id: setVariable_ACJp3O
+                  assignments:
+                    - variable: Global.Codigo
+                      value: =Blank()
+
+                    - variable: Global.Assunto
+                      value: =Blank()
+
+                    - variable: Global.Status
+                      value: =Blank()
+
+                    - variable: Global.Resposta
+                      value: =Blank()
+
+                - kind: InvokeFlowAction
+                  id: invokeFlowAction_pjWXRj
+                  input:
+                    binding:
+                      text: =Topic.Token
+                      text_1: =Concatenate("Sistemas - RM ",Topic.Validacao_RM)
+
+                  output:
+                    binding:
+                      assunto: Global.Assunto
+                      codigo: Global.Codigo
+                      resposta: Global.Resposta
+                      status: Global.Status
+
+                  flowId: c06ec0ad-6fea-f011-8544-7c1e526a9a9f
+
+        - id: conditionItem_eKiszC
+          condition: =Topic.Equipe = 'crdb8_deskManagerItSupportAgent.topic.Abertura-Classificaodochamado.main.question_AiZP0a'.'Finalizar atendimento'
+          actions:
+            - kind: SendActivity
+              id: sendActivity_ZOaXUm
+              activity:
+                text:
+                  - "Ok. "
+                  - |-
+                    Vamos finalizar o seu atendimento. 
+                    A emccamp agradecesse o seu contato.
+
+            - kind: CancelAllDialogs
+              id: 5F8LzU
+
+      elseActions:
+        - kind: SendActivity
+          id: sendActivity_2tosLD
+          activity: |-
+            Não entendi o que voce precisa.
+            Vou te mandar de volta pro meu principal.
+
+        - kind: BeginDialog
+          id: izuJGc
+          dialog: crdb8_deskManagerItSupportAgent.topic.MenuPrincipal
+
+    - kind: ConditionGroup
+      id: conditionGroup_klDgW3
+      conditions:
+        - id: conditionItem_RNj1zl
+          condition: =Global.Status = "Nao Encontrado"
+          actions:
+            - kind: SetVariable
+              id: setVariable_caMtkg
+              variable: Global.Descricao
+              value: =Blank()
+
+            - kind: Question
+              id: question_e2BPjn
+              interruptionPolicy:
+                allowInterruption: true
+
+              alwaysPrompt: true
+              variable: Global.Descricao
+              prompt: |-
+                Infelizmente não encontramos o Assunto que voce procura, por isto, vamos abrir seu chamado em categoria generica e reclassificaremos depois.
+                Poderia descrever abaixo o que voce procura?
+              entity:
+                kind: StringPrebuiltEntity
+                sensitivityLevel: None
+
+            - kind: SetVariable
+              id: setVariable_j92bCf
+              variable: Global.Descricao
+              value: =Substitute(Substitute(Global.Descricao, Char(13), ""), Char(10), "  ")
+
+            - kind: BeginDialog
+              id: DdCNzi
+              dialog: crdb8_deskManagerItSupportAgent.topic.Boty-Abrechamado
+
+        - id: conditionItem_Y3FsN4
+          condition: =Global.Status = "Exata"
+          actions:
+            - kind: SetVariable
+              id: setVariable_Rf8InR
+              variable: Global.Descricao
+              value: =Blank()
+
+            - kind: Question
+              id: question_pHOiyZ
+              interruptionPolicy:
+                allowInterruption: true
+
+              alwaysPrompt: true
+              variable: Global.Descricao
+              prompt: |-
+                Combinado! Vamos classificar seu chamado na categoria:
+
+
+                **{Global.Assunto}**
+
+
+                _Confere?_
+
+
+                Agora, descreva com detalhes a sua solicitação:
+              entity:
+                kind: StringPrebuiltEntity
+                sensitivityLevel: None
+
+            - kind: SetVariable
+              id: setVariable_sTUb2D
+              variable: Global.Descricao
+              value: =Substitute(Substitute(Global.Descricao, Char(13), ""), Char(10), "  ")
+
+            - kind: BeginDialog
+              id: KVsRoD
+              dialog: crdb8_deskManagerItSupportAgent.topic.Boty-Abrechamado
+
+      elseActions:
+        - kind: ParseValue
+          id: a4qr24
+          variable: Topic.ListaOpcoes
+          valueType:
+            kind: Table
+            properties:
+              Value: String
+
+          value: =Global.Resposta
+
+        - kind: Question
+          id: question_MpZp75
+          interruptionPolicy:
+            allowInterruption: true
+
+          alwaysPrompt: true
+          variable: init:Topic.CategoriaEscolhida
+          prompt: Qual dessas categorias melhor definem o que voce precisa?
+          entity:
+            kind: DynamicClosedListEntity
+            items: =Topic.ListaOpcoes
+
+        - kind: SetMultipleVariables
+          id: setVariable_t9JdWD
+          assignments:
+            - variable: Global.Codigo
+              value: =Blank()
+
+            - variable: Global.Assunto
+              value: =Blank()
+
+            - variable: Global.Status
+              value: =Blank()
+
+            - variable: Global.Resposta
+              value: =Blank()
+
+        - kind: InvokeFlowAction
+          id: invokeFlowAction_wJfvtr
+          input:
+            binding:
+              text: =Topic.Token
+              text_1: =Topic.CategoriaEscolhida
+
+          output:
+            binding:
+              assunto: Global.Assunto
+              codigo: Global.Codigo
+              resposta: Global.Resposta
+              status: Global.Status
+
+          flowId: c06ec0ad-6fea-f011-8544-7c1e526a9a9f
+
+        - kind: SetVariable
+          id: setVariable_KiI4Vi
+          variable: Global.Descricao
+          value: =Blank()
+
+        - kind: Question
+          id: question_rHRbwm
+          interruptionPolicy:
+            allowInterruption: false
+
+          alwaysPrompt: true
+          variable: Global.Descricao
+          prompt: |-
+            Combinado! Vamos classificar seu chamado na categoria:
+
+
+            **{Global.Assunto}**,
+
+
+            _Confere?_
+
+            **Agora, descreva com detalhes a sua solicitação:**
+          entity:
+            kind: StringPrebuiltEntity
+            sensitivityLevel: None
+
+        - kind: SetVariable
+          id: setVariable_Nvd58M
+          variable: Global.Descricao
+          value: =Substitute(Substitute(Global.Descricao, Char(13), ""), Char(10), "  ")
+
+        - kind: BeginDialog
+          id: KAr277
+          dialog: crdb8_deskManagerItSupportAgent.topic.Boty-Abrechamado
+
+inputType:
+  properties:
+    SolicitacaoInfra:
+      displayName: SolicitacaoInfra
+      type:
+        kind: ClosedListOptionSet
+        schemaName: crdb8_deskManagerItSupportAgent.entity.SolicitaesInfra
+
+    SolicitacaoSistemas:
+      displayName: SolicitacaoSistemas
+      type:
+        kind: ClosedListOptionSet
+        sensitivityLevel: None
+        schemaName: crdb8_deskManagerItSupportAgent.entity.SolicitaesSistemas
+
+outputType:
+  properties:
+    SolicitacaoInfra:
+      displayName: SolicitacaoInfra
+      type:
+        kind: ClosedListOptionSet
+        schemaName: crdb8_deskManagerItSupportAgent.entity.SolicitaesInfra
+
+    SolicitacaoSistemas:
+      displayName: SolicitacaoSistemas
+      type:
+        kind: ClosedListOptionSet
+        sensitivityLevel: None
+        schemaName: crdb8_deskManagerItSupportAgent.entity.SolicitaesSistemas

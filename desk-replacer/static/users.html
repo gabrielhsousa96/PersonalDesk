@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Gestão de Usuários - Helpdesk</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#0f172a",
+                        "card-dark": "#1e293b",
+                        "neutral-slate": "#334155",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+
+        .fill-1 {
+            font-variation-settings: 'FILL' 1;
+        }
+
+        .safe-area-pb {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 h-[100dvh] overflow-hidden flex flex-col">
+    <!-- Header -->
+    <header
+        class="shrink-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-4">
+        <div class="max-w-5xl mx-auto flex items-center justify-between">
+            <h1 class="text-xl font-bold tracking-tight">Gestão de Usuários</h1>
+            <!-- Only Admins can create new users ideally, but we will leave the button visually -->
+            <button id="btnNewUser" onclick="openNewUserModal()"
+                class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">add</span>
+                Novo Usuário
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto w-full">
+        <div class="max-w-5xl mx-auto p-4 space-y-4">
+            <!-- Search and Filters -->
+        <div class="flex flex-col md:flex-row gap-3">
+            <div class="relative flex-1">
+                <span
+                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                <input id="searchInput"
+                    class="w-full bg-white dark:bg-card-dark border-slate-200 dark:border-slate-700 rounded-lg pl-10 pr-4 py-2 focus:ring-2 focus:ring-primary outline-none transition-all placeholder:text-slate-500"
+                    placeholder="Buscar usuários por nome..." type="text" />
+            </div>
+            <div class="flex gap-2 pb-1 md:pb-0">
+                <select id="filterRole"
+                    class="bg-white dark:bg-card-dark border border-slate-200 dark:border-slate-700 px-3 py-2 rounded-lg text-sm outline-none">
+                    <option value="all">Todos os Cargos</option>
+                    <option value="Administrator">Administrador</option>
+                    <option value="Operador">Operador (Suporte)</option>
+                    <option value="Solicitante">Cliente (Solicitante)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Dynamic User List Container -->
+        <div class="space-y-3" id="userListContainer">
+            <!-- JS will inject the user cards here like the template -->
+            <div class="p-4 text-center text-slate-500">
+                Carregando banco de dados...
+            </div>
+        </div>
+        </div>
+    </main>
+
+    <!-- Modal Novo Usuário -->
+    <div id="modalNewUser"
+        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div
+            class="bg-white dark:bg-card-dark w-full max-w-lg rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white">Criar Novo Usuário</h2>
+                <span id="closeNewUserBtn"
+                    class="material-symbols-outlined text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer transition-colors">close</span>
+            </div>
+            <div class="p-6">
+                <!-- Dynamic Alert Error -->
+                <div id="newUserError" class="hidden mb-4 p-4 rounded-lg bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-900/50 text-sm">
+                    Erro ao criar o usuário.
+                </div>
+                <!-- Dynamic Alert Success -->
+                <div id="newUserSuccess" class="hidden mb-4 p-4 rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50 text-sm">
+                    Usuário criado com sucesso!
+                </div>
+                
+                <form id="newUserForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nome de Usuário (Username)</label>
+                        <input type="text" id="nuUsername" required
+                            class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Senha Provisória</label>
+                        <input type="password" id="nuPassword" required
+                            class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nível de Acesso (Cargo)</label>
+                        <select id="nuProfile" required
+                            class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                            <option value="">Carregando perfis...</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nome Completo</label>
+                        <input type="text" id="nuFullName"
+                            class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                        <input type="email" id="nuEmail"
+                            class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                    </div>
+                    <button type="submit"
+                        class="w-full mt-4 bg-primary hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-lg shadow transition-all active:scale-[0.98]">
+                        Criar Usuário
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav
+        class="shrink-0 relative w-full bg-white/90 dark:bg-card-dark/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 safe-area-pb">
+        <div class="max-w-md mx-auto flex justify-around py-3">
+            <a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors"
+                href="/dashboard">
+                <span class="material-symbols-outlined">confirmation_number</span>
+                <span class="text-[10px] font-medium uppercase tracking-tight">Tickets</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 text-primary transition-colors" href="/users">
+                <span class="material-symbols-outlined fill-1">group_work</span>
+                <span class="text-[10px] font-bold uppercase tracking-tight">Usuários</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors" href="/reports">
+                <span class="material-symbols-outlined">bar_chart</span>
+                <span class="text-[10px] font-medium uppercase tracking-tight">Relatórios</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors"
+                href="/profile">
+                <span class="material-symbols-outlined">person</span>
+                <span class="text-[10px] font-medium uppercase tracking-tight">Perfil</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors"
+                href="/config" id="navConfigBtn" style="display:none;">
+                <span class="material-symbols-outlined">settings</span>
+                <span class="text-[10px] font-medium uppercase tracking-tight">Ajustes</span>
+            </a>
+        </div>
+    </nav>
+    <script src="/static/users.js?v=4"></script>
+    <script src="/static/app.js"></script>
+</body>
+
+</html>

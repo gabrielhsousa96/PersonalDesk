@@ -1,0 +1,15 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnInactivity
+  id: main
+  durationInSeconds: 900
+  actions:
+    - kind: SendActivity
+      id: sendActivity_wF64H0
+      activity: "Por motivos de inatividade, estamos encerando a sua sessão. "
+
+    - kind: CancelAllDialogs
+      id: VWEI7B
+
+inputType: {}
+outputType: {}

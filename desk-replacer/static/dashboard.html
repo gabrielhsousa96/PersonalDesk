@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Chamados (Desk API)</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#0f172a",
+                        "card-dark": "#1e293b",
+                        "neutral-slate": "#334155",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .fill-1 {
+            font-variation-settings: 'FILL' 1;
+        }
+
+        /* Thin Scrollbar for Kanban */
+        .board-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .board-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .board-scroll::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        /* Drag and Drop Helpers */
+        .drag-over {
+            background-color: rgba(16, 183, 127, 0.1) !important;
+            border: 2px dashed #10b77f !important;
+        }
+
+        .dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+        }
+
+        .grab-cursor {
+            cursor: grab;
+        }
+
+        .grab-cursor:active {
+            cursor: grabbing;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 flex flex-col h-[100dvh] overflow-hidden">
+    <main class="flex-1 overflow-hidden w-full max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8 flex flex-col">
+        <header
+            class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-slate-200 dark:border-slate-800 gap-4">
+            <div class="flex items-center gap-4">
+                <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Gestão de Chamados</h1>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <button id="btnNewTicket"
+                    class="bg-primary hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors text-sm flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[20px]">add</span> Novo Chamado
+                </button>
+            </div>
+        </header>
+
+        <div class="flex gap-4 overflow-x-auto pb-2 board-scroll flex-1 items-start">
+            <!-- Aguardando atendimento -->
+            <div class="column bg-white dark:bg-card-dark rounded-xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm"
+                id="col-Aguardando atendimento">
+                <h2
+                    class="font-semibold text-slate-700 dark:text-slate-300 mb-4 flex justify-between items-center text-sm uppercase tracking-wider shrink-0">
+                    Aguardando atendi... <span
+                        class="count bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full text-xs font-bold">0</span>
+                </h2>
+                <div class="flex-1 overflow-y-auto mb-2 flex flex-col gap-3 min-h-[50px] transition-colors rounded-lg board-scroll"
+                    data-status="Aguardando atendimento"></div>
+            </div>
+
+            <!-- Em atendimento -->
+            <div class="column bg-white dark:bg-card-dark rounded-xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm"
+                id="col-Em atendimento">
+                <h2
+                    class="font-semibold text-slate-700 dark:text-slate-300 mb-4 flex justify-between items-center text-sm uppercase tracking-wider shrink-0">
+                    Em atendimento <span
+                        class="count bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full text-xs font-bold">0</span>
+                </h2>
+                <div class="flex-1 overflow-y-auto mb-2 flex flex-col gap-3 min-h-[50px] transition-colors rounded-lg board-scroll"
+                    data-status="Em atendimento"></div>
+            </div>
+
+            <!-- Aguardando terceiros -->
+            <div class="column bg-white dark:bg-card-dark rounded-xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm"
+                id="col-Aguardando terceiros">
+                <h2
+                    class="font-semibold text-slate-700 dark:text-slate-300 mb-4 flex justify-between items-center text-sm uppercase tracking-wider shrink-0">
+                    Aguardando terceiros <span
+                        class="count bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full text-xs font-bold">0</span>
+                </h2>
+                <div class="flex-1 overflow-y-auto mb-2 flex flex-col gap-3 min-h-[50px] transition-colors rounded-lg board-scroll"
+                    data-status="Aguardando terceiros"></div>
+            </div>
+
+            <!-- Aguardando testes -->
+            <div class="column bg-white dark:bg-card-dark rounded-xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm"
+                id="col-Aguardando testes">
+                <h2
+                    class="font-semibold text-slate-700 dark:text-slate-300 mb-4 flex justify-between items-center text-sm uppercase tracking-wider shrink-0">
+                    Aguardando testes <span
+                        class="count bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full text-xs font-bold">0</span>
+                </h2>
+                <div class="flex-1 overflow-y-auto mb-2 flex flex-col gap-3 min-h-[50px] transition-colors rounded-lg board-scroll"
+                    data-status="Aguardando testes"></div>
+            </div>
+
+            <!-- Concluido -->
+            <div class="column bg-white dark:bg-card-dark rounded-xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm opacity-60 hover:opacity-100 transition-opacity"
+                id="col-Concluido">
+                <h2
+                    class="font-semibold text-slate-700 dark:text-slate-300 mb-4 flex justify-between items-center text-sm uppercase tracking-wider shrink-0">
+                    Concluido <span
+                        class="count bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full text-xs font-bold">0</span>
+                </h2>
+                <div class="flex-1 overflow-y-auto mb-2 flex flex-col gap-3 min-h-[50px] transition-colors rounded-lg board-scroll"
+                    data-status="Concluido"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Novo Chamado -->
+    <div id="modal"
+        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div
+            class="bg-white dark:bg-card-dark w-full max-w-md rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Opções e Controles</h2>
+                <span
+                    class="close-btn material-symbols-outlined text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer transition-colors">close</span>
+            </div>
+            <div class="p-6">
+                <!-- Added logout inside the modal for styling/spacing reasons initially, but the user wanted standard. So I will keep the new ticket form here, and maybe we don't need the logout if it relies on bottom nav -->
+                <form id="ticketForm" class="space-y-4">
+                    <div>
+                        <label for="title"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Título do
+                            Erro/Chamado</label>
+                        <input type="text" id="title" required
+                            class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder:text-slate-400">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="ticketCategory"
+                                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Categoria</label>
+                            <select id="ticketCategory" required
+                                class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                                <option value="" disabled selected>Selecione...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="ticketType"
+                                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tipo</label>
+                            <select id="ticketType" required disabled
+                                class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all disabled:opacity-50">
+                                <option value="" disabled selected>Escolha a categoria</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="description"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Descrição do
+                            Problema</label>
+                        <textarea id="description" rows="4" required
+                            class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder:text-slate-400 resize-none"></textarea>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-primary hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-lg shadow transition-all active:scale-[0.98]">
+                        Salvar Chamado
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Interações do Chamado -->
+    <div id="ticketDetailsModal"
+        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div
+            class="bg-white dark:bg-card-dark w-full max-w-lg md:max-w-2xl max-h-[90vh] flex flex-col rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <!-- Header -->
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-start">
+                <div class="w-full pr-4">
+                    <h2 id="tdmTitle" class="text-xl font-bold text-slate-900 dark:text-white leading-tight">...</h2>
+                    <div class="flex flex-wrap items-center gap-2 mt-3" id="tdmMeta">
+                        <!-- badges dinâmicas via js -->
+                    </div>
+                </div>
+                <span id="closeDetailsBtn"
+                    class="material-symbols-outlined text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer transition-colors pt-1">close</span>
+            </div>
+
+            <!-- Descrição Original & Timeline (Rolável) -->
+            <div class="p-6 overflow-y-auto flex-1 bg-slate-50 dark:bg-slate-900/50" id="tdmBody">
+                <div class="mb-6 pb-6 border-b border-slate-200 dark:border-slate-800">
+                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">notes</span> Descrição Original</h3>
+                    <p id="tdmDescription"
+                        class="text-sm text-slate-700 dark:text-slate-300 antialiased leading-relaxed whitespace-pre-wrap">
+                        ...</p>
+                </div>
+
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-1"><span
+                        class="material-symbols-outlined text-[16px]">forum</span> Interações</h3>
+                <div id="tdmInteractionsList" class="space-y-4">
+                    <!-- Interações injetadas via JS -->
+                </div>
+            </div>
+
+            <!-- Formulário Novo Comentário -->
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-card-dark">
+                <form id="interactionForm" class="flex gap-2 items-end">
+                    <div class="flex-1 relative">
+                        <textarea id="interactionContent" rows="1" required placeholder="Adicionar um comentário..."
+                            class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white max-h-32 min-h-[48px] px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder:text-slate-400 resize-none"></textarea>
+                    </div>
+                    <button type="submit" id="btnSubmitInteraction"
+                        class="bg-primary hover:bg-emerald-600 text-white font-bold h-[48px] px-5 rounded-lg shadow transition-all active:scale-[0.98] flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-[20px]">send</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav
+        class="shrink-0 relative w-full bg-white/90 dark:bg-card-dark/90 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 pb-safe pt-2 px-4 shadow-[0_-4px_25px_-5px_rgba(0,0,0,0.1)] dark:shadow-none z-40">
+        <div class="max-w-md mx-auto flex justify-between items-end pb-2">
+            <a class="flex flex-1 flex-col items-center gap-1 text-primary transition-colors" href="/dashboard">
+                <span class="material-symbols-outlined fill-1">confirmation_number</span>
+                <span class="text-[10px] font-bold uppercase tracking-tight">Tickets</span>
+            </a>
+            <a class="flex flex-1 flex-col items-center gap-1 text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
+                href="/users" id="navUsersBtn" style="display:none;">
+                <span class="material-symbols-outlined">group_work</span>
+                <span class="text-[10px] font-medium uppercase tracking-tight">Usuários</span>
+            </a>
+            <a class="flex flex-1 flex-col items-center gap-1 text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
+                href="/reports">
+                <span class="material-symbols-outlined">bar_chart</span>
+                <span class="text-[10px] font-medium uppercase tracking-tight">Relatórios</span>
+            </a>
+            <a class="flex flex-1 flex-col items-center gap-1 text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
+                href="/profile">
+                <span class="material-symbols-outlined">person</span>
+                <span class="text-[10px] font-medium uppercase tracking-tight">Perfil</span>
+            </a>
+            <a class="flex flex-1 flex-col items-center gap-1 text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
+                href="/config" id="navConfigBtn" style="display:none;">
+                <span class="material-symbols-outlined">settings</span>
+                <span class="text-[10px] font-medium uppercase tracking-tight">Ajustes</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Tailwind CDN Safelist for app.js dynamic injected classes -->
+    <div
+        class="hidden border-l-4 hover:shadow-md focus:outline-none border-amber-500 border-purple-500 border-blue-500 border-emerald-500 border-slate-400 dark:border-slate-600 dark:border-slate-700 border-slate-200 text-[11px] truncate uppercase tracking-wider px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 leading-tight line-clamp-2 mb-3 leading-relaxed mt-auto pt-3 border-t border-slate-100 text-xs">
+    </div>
+
+    <script src="/static/app.js?v=4"></script>
+</body>
+
+</html>

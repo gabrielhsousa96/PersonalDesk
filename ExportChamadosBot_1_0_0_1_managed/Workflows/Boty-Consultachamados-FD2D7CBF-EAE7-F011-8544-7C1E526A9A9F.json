@@ -1,0 +1,566 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "description": "",
+                  "title": "Token",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_1": {
+                  "description": "",
+                  "title": "Pesquisa",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "number": {
+                  "description": "",
+                  "title": "Solicitante",
+                  "type": "number",
+                  "x-ms-content-hint": "NUMBER",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "text",
+                "text_1"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Token": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Token",
+                "type": "string",
+                "value": "@triggerBody()?['text']"
+              }
+            ]
+          },
+          "runAfter": {
+            "Solicitante": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Pesquisa": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Pesquisa",
+                "type": "string",
+                "value": "@triggerBody()?['text_1']"
+              }
+            ]
+          },
+          "runAfter": {
+            "Token": [
+              "Succeeded"
+            ]
+          }
+        },
+        "RespostaFinal": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RespostaFinal",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Pesquisa": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Consulta_interações": {
+          "type": "Http",
+          "inputs": {
+            "uri": "https://api.desk.ms/ChamadoHistoricos/lista",
+            "method": "POST",
+            "headers": {
+              "Authorization": "@{variables('Token')}"
+            },
+            "body": {
+              "CodChamado": "@triggerBody()?['text_1']",
+              "Solicitante": "N",
+              "Colunas": {
+                "Chave": "on",
+                "Descricao": "on",
+                "Status": "on",
+                "DataCriacao": "on",
+                "HoraCriacao": "on",
+                "Operador": "on",
+                "NomeFormaAtendimento": "on"
+              }
+            }
+          },
+          "runAfter": {
+            "DATA_CRIACAO": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "Normalizar_Dados": {
+          "type": "Compose",
+          "inputs": "@if(\r\n    startsWith(trim(body('Consulta_interações')), '['),\r\n    json(body('Consulta_interações')),\r\n    if(\r\n        empty(json(body('Consulta_interações'))?['root']),\r\n        createArray(),\r\n        if(\r\n            equals(coalesce(json(body('Consulta_interações'))?['root']?[0], 'IsObject'), 'IsObject'),\r\n            createArray(json(body('Consulta_interações'))?['root']),\r\n            json(body('Consulta_interações'))?['root']\r\n        )\r\n    )\r\n)",
+          "runAfter": {
+            "Consulta_interações": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Condition": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@empty(outputs('Normalizar_Dados'))",
+                  true
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Consulta_Chamados": {
+              "type": "Http",
+              "inputs": {
+                "uri": "https://api.desk.ms/ChamadosSuporte/lista",
+                "method": "POST",
+                "headers": {
+                  "Authorization": "@{variables('Token')}"
+                },
+                "body": {
+                  "Pesquisa": "@triggerBody()?['text_1']",
+                  "StatusSLA": "S",
+                  "Ativo": "Todos",
+                  "Colunas": {
+                    "CodChamado": "on",
+                    "DataCriacao": "on",
+                    "DataAlteracao": "on",
+                    "HoraAlteracao": "on",
+                    "NomeStatus": "on",
+                    "Assunto": "on",
+                    "Descricao": "on",
+                    "NomeOperador": "on",
+                    "SobrenomeOperador": "on",
+                    "Sla": "on"
+                  },
+                  "Ordem": [
+                    {
+                      "Coluna": "CodChamado",
+                      "Direcao": "true"
+                    }
+                  ]
+                }
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                }
+              }
+            },
+            "Parse_JSON": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('Consulta_Chamados')",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "root": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "CodChamado": {
+                            "type": "string"
+                          },
+                          "DataCriacao": {
+                            "type": "string"
+                          },
+                          "DataAlteracao": {
+                            "type": "string"
+                          },
+                          "HoraAlteracao": {
+                            "type": "string"
+                          },
+                          "NomeStatus": {
+                            "type": "string"
+                          },
+                          "Assunto": {
+                            "type": "string"
+                          },
+                          "Descricao": {
+                            "type": "string"
+                          },
+                          "SlaInternoCliente": {
+                            "type": "string"
+                          },
+                          "TempoRestantePrimeiroAtendimento": {
+                            "type": "string"
+                          },
+                          "TempoRestanteSegundoAtendimento": {
+                            "type": "string"
+                          },
+                          "ExpiraEm": {
+                            "type": "string"
+                          },
+                          "SlaAndamento": {
+                            "type": "string"
+                          },
+                          "Sla1Expirado": {
+                            "type": "string"
+                          },
+                          "Sla2Expirado": {
+                            "type": "string"
+                          },
+                          "CE": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "CodChamado",
+                          "DataCriacao",
+                          "DataAlteracao",
+                          "HoraAlteracao",
+                          "NomeStatus",
+                          "Assunto",
+                          "Descricao",
+                          "SlaInternoCliente",
+                          "TempoRestantePrimeiroAtendimento",
+                          "TempoRestanteSegundoAtendimento",
+                          "ExpiraEm",
+                          "SlaAndamento",
+                          "Sla1Expirado",
+                          "Sla2Expirado",
+                          "CE"
+                        ]
+                      }
+                    },
+                    "total": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Consulta_Chamados": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Respond_to_the_agent_1": {
+              "type": "Response",
+              "kind": "Skills",
+              "inputs": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ultimostatus": {
+                      "title": "UltimoStatus",
+                      "description": "",
+                      "type": "string",
+                      "x-ms-content-hint": "TEXT",
+                      "x-ms-dynamically-added": true
+                    },
+                    "ultimooperador": {
+                      "title": "UltimoOperador",
+                      "description": "",
+                      "type": "string",
+                      "x-ms-content-hint": "TEXT",
+                      "x-ms-dynamically-added": true
+                    },
+                    "ultimadescricao": {
+                      "title": "UltimaDescricao",
+                      "description": "",
+                      "type": "string",
+                      "x-ms-content-hint": "TEXT",
+                      "x-ms-dynamically-added": true
+                    },
+                    "numerochamado": {
+                      "title": "NumeroChamado",
+                      "description": "",
+                      "type": "string",
+                      "x-ms-content-hint": "TEXT",
+                      "x-ms-dynamically-added": true
+                    },
+                    "datacriacao": {
+                      "title": "DataCriacao",
+                      "description": "",
+                      "type": "string",
+                      "format": "date",
+                      "x-ms-content-hint": "DATE",
+                      "x-ms-dynamically-added": true
+                    }
+                  },
+                  "additionalProperties": {}
+                },
+                "statusCode": 200,
+                "body": {
+                  "ultimostatus": "@{variables('STATUS')}",
+                  "ultimooperador": "@{variables('Operador')}",
+                  "ultimadescricao": "@{variables('RespostaFinal')}",
+                  "numerochamado": "@{variables('CHAMADO')}",
+                  "datacriacao": "@{variables('Data_Criacao')}"
+                }
+              },
+              "runAfter": {
+                "For_each": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "For_each": {
+              "type": "Foreach",
+              "foreach": "@outputs('Parse_JSON')?['body']?['root']",
+              "actions": {
+                "SETA_STATUS": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "STATUS",
+                    "value": "@items('For_each')?['NomeStatus']"
+                  }
+                },
+                "SETA_OPERADOR": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Operador",
+                    "value": "@{items('For_each')?['NomeOperador']} @{items('For_each')?['SobrenomeOperador']}"
+                  },
+                  "runAfter": {
+                    "SETA_STATUS": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "SETA_DESCRICAO": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "RespostaFinal",
+                    "value": "@items('For_each')?['Descricao']"
+                  },
+                  "runAfter": {
+                    "SETA_OPERADOR": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "SETA_CHAMADO": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "CHAMADO",
+                    "value": "@items('For_each')?['CodChamado']"
+                  },
+                  "runAfter": {
+                    "SETA_DESCRICAO": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "SETA_DATA": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Data_Criacao",
+                    "value": "@items('For_each')?['DataCriacao']"
+                  },
+                  "runAfter": {
+                    "SETA_CHAMADO": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runAfter": {
+                "Parse_JSON": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "else": {
+            "actions": {
+              "Respond_to_the_agent": {
+                "type": "Response",
+                "kind": "Skills",
+                "inputs": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "ultimostatus": {
+                        "title": "UltimoStatus",
+                        "description": "",
+                        "type": "string",
+                        "x-ms-content-hint": "TEXT",
+                        "x-ms-dynamically-added": true
+                      },
+                      "ultimooperador": {
+                        "title": "UltimoOperador",
+                        "description": "",
+                        "type": "string",
+                        "x-ms-content-hint": "TEXT",
+                        "x-ms-dynamically-added": true
+                      },
+                      "ultimadescricao": {
+                        "title": "UltimaDescricao",
+                        "description": "",
+                        "type": "string",
+                        "x-ms-content-hint": "TEXT",
+                        "x-ms-dynamically-added": true
+                      },
+                      "numerochamado": {
+                        "title": "NumeroChamado",
+                        "description": "",
+                        "type": "string",
+                        "x-ms-content-hint": "TEXT",
+                        "x-ms-dynamically-added": true
+                      },
+                      "datacriacao": {
+                        "title": "DataCriacao",
+                        "description": "",
+                        "type": "string",
+                        "format": "date",
+                        "x-ms-content-hint": "DATE",
+                        "x-ms-dynamically-added": true
+                      }
+                    },
+                    "additionalProperties": {}
+                  },
+                  "statusCode": 200,
+                  "body": {
+                    "ultimostatus": "@{coalesce(first(outputs('Normalizar_Dados'))?['Status']?[0]?['text'], 'Sem status')}",
+                    "ultimooperador": "@{coalesce(first(outputs('Normalizar_Dados'))?['Operador']?[0]?['text'], 'Sem operador definido')}",
+                    "ultimadescricao": "@{first(outputs('Normalizar_Dados'))?['Descricao']}",
+                    "numerochamado": "@{first(outputs('Normalizar_Dados'))?['Chave']}",
+                    "datacriacao": "@{first(outputs('Normalizar_Dados'))?['DataCriacao']}"
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Normalizar_Dados": [
+              "Succeeded"
+            ]
+          }
+        },
+        "STATUS": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "STATUS",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "RespostaFinal": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Operador": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Operador",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "STATUS": [
+              "Succeeded"
+            ]
+          }
+        },
+        "CHAMADO": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CHAMADO",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Operador": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Solicitante": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Solicitante",
+                "type": "integer",
+                "value": "@triggerBody()?['number']"
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "DATA_CRIACAO": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Data_Criacao",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "CHAMADO": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "outputs": {},
+      "description": "This flow starts when it receives a request containing a token and an email. It uses these details to search for support tickets related to the email address. The flow retrieves and parses the five most recent tickets, then gathers the latest interaction for each one. It compiles key information—such as ticket number, creation date, status, responsible person, and the last message—into a formatted summary. Finally, it sends this summary back as a response, providing a quick overview of the user's recent support activity."
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

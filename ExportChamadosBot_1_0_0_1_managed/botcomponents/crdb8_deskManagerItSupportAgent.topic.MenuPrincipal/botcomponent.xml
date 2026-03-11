@@ -1,0 +1,10 @@
+<botcomponent schemaname="crdb8_deskManagerItSupportAgent.topic.MenuPrincipal">
+  <componenttype>9</componenttype>
+  <iscustomizable>0</iscustomizable>
+  <name>Boty - Menu Principal</name>
+  <parentbotid>
+    <schemaname>crdb8_deskManagerItSupportAgent</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

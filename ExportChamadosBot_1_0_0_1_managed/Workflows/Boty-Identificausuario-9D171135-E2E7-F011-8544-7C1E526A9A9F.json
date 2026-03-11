@@ -1,0 +1,299 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "description": "Enter an email address.",
+                  "format": "email",
+                  "title": "Email",
+                  "type": "string",
+                  "x-ms-content-hint": "EMAIL",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "email"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Email": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Email",
+                "type": "string",
+                "value": "@triggerBody()?['email']"
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Nome_Completo": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Nome_Completo",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Email": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Codigo_usuario": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Codigo_usuario",
+                "type": "integer"
+              }
+            ]
+          },
+          "runAfter": {
+            "Nome_Completo": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Api_token": {
+          "type": "Http",
+          "inputs": {
+            "uri": "https://api.desk.ms/Login/autenticar",
+            "method": "POST",
+            "headers": {
+              "Authorization": "7aee79e23ec6dffe3ff71fece6f31f9aa45e6ff0",
+              "JsonPath": "true"
+            },
+            "body": {
+              "PublicKey": "15ac0308c90001f7f11b18cc717a8d058335411d"
+            }
+          },
+          "runAfter": {
+            "Codigo_usuario": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "Organiza_Token": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('Api_token')",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "access_token": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Api_token": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Verifica_Usuario": {
+          "type": "Http",
+          "inputs": {
+            "uri": "https://api.desk.ms/Usuarios/lista",
+            "method": "POST",
+            "headers": {
+              "Authorization": "@{body('Organiza_Token')?['access_token']}"
+            },
+            "body": {
+              "Pesquisa": "@variables('Email')",
+              "Ativo": "S",
+              "Colunas": {
+                "Chave": "on",
+                "Nome": "on",
+                "Sobrenome": "on"
+              },
+              "Ordem": [
+                {
+                  "Coluna": "Nome",
+                  "Direcao": "true"
+                }
+              ]
+            }
+          },
+          "runAfter": {
+            "Organiza_Token": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "Organiza_Usuario": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('Verifica_Usuario')",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "root": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Chave": {
+                        "type": "integer"
+                      },
+                      "Nome": {
+                        "type": "string"
+                      },
+                      "Sobrenome": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "Chave",
+                      "Nome",
+                      "Sobrenome"
+                    ]
+                  }
+                },
+                "total": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Verifica_Usuario": [
+              "Succeeded"
+            ]
+          }
+        },
+        "For_each": {
+          "type": "Foreach",
+          "foreach": "@outputs('Organiza_Usuario')?['body']?['root']",
+          "actions": {
+            "For_each_1": {
+              "type": "Foreach",
+              "foreach": "@outputs('Organiza_Usuario')?['body']?['root']",
+              "actions": {
+                "Define_o_Nome": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Nome_Completo",
+                    "value": "@concat(item()?['Nome'], ' ', item()?['Sobrenome'])"
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Organiza_Usuario": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Respond_to_the_agent": {
+          "type": "Response",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nome_completo": {
+                  "title": "Nome_Completo",
+                  "description": "Nome Completo do solicitante",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "codigo_solicitante": {
+                  "title": "Codigo_Solicitante",
+                  "description": "Codigo do Solicitante",
+                  "type": "number",
+                  "x-ms-content-hint": "NUMBER",
+                  "x-ms-dynamically-added": true
+                },
+                "email_solicitante": {
+                  "title": "Email_Solicitante",
+                  "description": "Email do solicitante",
+                  "type": "string",
+                  "format": "email",
+                  "x-ms-content-hint": "EMAIL",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "nome_completo": "@{variables('Nome_Completo')}",
+              "codigo_solicitante": "@variables('Codigo_usuario')",
+              "email_solicitante": "@{variables('Email')}"
+            }
+          },
+          "runAfter": {
+            "For_each_2": [
+              "Succeeded"
+            ]
+          }
+        },
+        "For_each_2": {
+          "type": "Foreach",
+          "foreach": "@outputs('Organiza_Usuario')?['body']?['root']",
+          "actions": {
+            "Define_o_codigo": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Codigo_usuario",
+                "value": "@item()?['Chave']"
+              }
+            }
+          },
+          "runAfter": {
+            "For_each": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

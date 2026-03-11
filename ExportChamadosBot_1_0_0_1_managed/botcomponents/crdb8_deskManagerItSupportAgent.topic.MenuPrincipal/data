@@ -1,0 +1,75 @@
+kind: AdaptiveDialog
+modelDescription: Use este tópico quando o usuário pedir para ver as opções disponíveis, quiser voltar ao início, estiver perdido ou disser coisas como "menu", "ajuda" ou "o que você faz".
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent: {}
+  actions:
+    - kind: InvokeFlowAction
+      id: invokeFlowAction_bm1S3r
+      input: {}
+      output:
+        binding:
+          token: Topic.Token
+
+      flowId: 8575b34a-e7e7-f011-8544-7c1e526a9a9f
+
+    - kind: Question
+      id: question_4GiwfR
+      interruptionPolicy:
+        allowInterruption: true
+
+      alwaysPrompt: true
+      variable: init:Topic.Var1
+      prompt: Agora me conta, **{System.User.FirstName}**, como posso te ajudar hoje? 👇
+      entity:
+        kind: EmbeddedEntity
+        definition:
+          kind: ClosedListEntity
+          items:
+            - id: Abrir um chamado
+              displayName: Abrir um chamado
+
+            - id: Consultar um chamado
+              displayName: Consultar um chamado
+
+            - id: Finalizar atendimento
+              displayName: Finalizar atendimento
+
+    - kind: ConditionGroup
+      id: conditionGroup_51AXvv
+      conditions:
+        - id: conditionItem_vS6maU
+          condition: =Topic.Var1 = 'crdb8_deskManagerItSupportAgent.topic.MenuPrincipal.main.question_4GiwfR'.'Abrir um chamado'
+          actions:
+            - kind: BeginDialog
+              id: 6vAJBe
+              input: {}
+              dialog: crdb8_deskManagerItSupportAgent.topic.Abertura-Classificaodochamado
+              output:
+                binding:
+                  SolicitacaoInfra: Topic.SolicitacaoInfra
+                  SolicitacaoSistemas: Topic.SolicitacaoSistemas
+
+        - id: conditionItem_Azl45H
+          condition: =Topic.Var1 = 'crdb8_deskManagerItSupportAgent.topic.MenuPrincipal.main.question_4GiwfR'.'Consultar um chamado'
+          actions:
+            - kind: BeginDialog
+              id: a2cq13
+              dialog: crdb8_deskManagerItSupportAgent.topic.Consultarumchamado
+
+        - id: conditionItem_88WWpD
+          condition: =Topic.Var1 = 'crdb8_deskManagerItSupportAgent.topic.MenuPrincipal.main.question_4GiwfR'.'Finalizar atendimento'
+          actions:
+            - kind: SendActivity
+              id: sendActivity_3VJzxk
+              activity: |-
+                Ok!
+                O Ti da emccamp agradece o seu contato. 
+                E estamos a disposição caso precise.
+
+            - kind: CancelAllDialogs
+              id: 97jZdj
+
+inputType: {}
+outputType: {}

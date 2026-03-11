@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#0f172a",
+                        "card-dark": "#1e293b",
+                        "neutral-slate": "#334155",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<title>Gestão de Usuários - Helpdesk</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-4">
+<div class="max-w-5xl mx-auto flex items-center justify-between">
+<h1 class="text-xl font-bold tracking-tight">Gestão de Usuários</h1>
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                Novo Usuário
+            </button>
+</div>
+</header>
+<main class="flex-1 max-w-5xl w-full mx-auto p-4 space-y-4 pb-24">
+<div class="flex flex-col md:flex-row gap-3">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full bg-white dark:bg-card-dark border-slate-200 dark:border-slate-700 rounded-lg pl-10 pr-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Buscar usuários por nome ou email..." type="text"/>
+</div>
+<div class="flex gap-2 overflow-x-auto pb-1 md:pb-0">
+<button class="flex items-center gap-2 bg-white dark:bg-card-dark border border-slate-200 dark:border-slate-700 px-3 py-2 rounded-lg text-sm whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                    Cargo
+                </button>
+<button class="flex items-center gap-2 bg-white dark:bg-card-dark border border-slate-200 dark:border-slate-700 px-3 py-2 rounded-lg text-sm whitespace-nowrap">
+                    Status
+                    <span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+</div>
+</div>
+<div class="space-y-3">
+<div class="bg-white dark:bg-card-dark p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4 group">
+<div class="flex items-center gap-4 flex-1">
+<div class="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border border-primary/30">
+<img class="h-full w-full object-cover" data-alt="Avatar masculino sorrindo com barba curta" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0T80i3lgn08CHwuO3HJwTGlqOhGRZLSlV7IUuIhHEh0aS46O8L9wqKdJMH2IbcOF6HQN-FKN10G-tJs6O7wjYhk1gQe6C_96Hx43fZfRk0fpkEKY0WyIWuBRubtK3CBwmMcAZ0gTQHp9ZGt3sX15Vp_iTwvRTSacZajI13N-2P8UI3hd8E2GKPM_K1n0nf3NBdo0KTNL32JW45Ygcjgea9m4XsFlRfbWxP3r_rBdblK65cSSKEvzh28U-EcuR1myMlFFr6bgZx2E"/>
+</div>
+<div class="min-w-0">
+<h3 class="font-semibold truncate">Ricardo Oliveira</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 truncate">ricardo.oliveira@empresa.com.br</p>
+</div>
+</div>
+<div class="hidden md:flex flex-col items-start w-32">
+<span class="text-xs uppercase tracking-wider text-slate-500 font-bold">Cargo</span>
+<span class="text-sm">Administrador</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+                        Ativo
+                    </span>
+<div class="flex items-center gap-1">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-card-dark p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4 group">
+<div class="flex items-center gap-4 flex-1">
+<div class="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border border-primary/30">
+<img class="h-full w-full object-cover" data-alt="Avatar feminino com cabelos longos escuros" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6hB10U_2eNgv4C0J9ZfIgE4KREgUtuKbkVJYdbTJQByc6WQV4Bnk5MOzQAL02wvtY0xS3e6D0hJ8H-rLsU_yXnV54GgJefBJAJIjTRxpyZO1UU1rEShHTJ8MWNvgEdzFRJyfxoTs4A4CKGT_KWRthZFJPdzqrcpkbjEVRfLvycGOAdPGWf_T44YFXnAssXK1Jowd_YsjdfI7K6uYWowDNKRHOJNyRC0NdnPFNpE3DaUF87hyB-14y23sgGPeq0hkv15rQmIraKOE"/>
+</div>
+<div class="min-w-0">
+<h3 class="font-semibold truncate">Juliana Costa</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 truncate">juliana.c@suporte.com</p>
+</div>
+</div>
+<div class="hidden md:flex flex-col items-start w-32">
+<span class="text-xs uppercase tracking-wider text-slate-500 font-bold">Cargo</span>
+<span class="text-sm">Agente</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+                        Ativo
+                    </span>
+<div class="flex items-center gap-1">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-card-dark p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4 group">
+<div class="flex items-center gap-4 flex-1">
+<div class="h-12 w-12 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden border border-slate-300 dark:border-slate-600">
+<img class="h-full w-full object-cover grayscale opacity-50" data-alt="Avatar masculino com óculos e boné" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQFNXVLSJZBISLNYEiXpb14mtheu3uNO5WluNnE_ryimIdyna0gyjoK2lfyTP15mG5MUuE-bbI9w3LKsd8LCl-96K7gYQNB5YsUu8jjLnSp8jD1b_Ls5NdARNIj9MlrV-c1m27ZVz4B1LqbYqLIPDrOcOsQLMwvF-VJuDphZc9T7i6oipXKIFE1H9ZV9OKn0TH8iQBDhILMLY3PUuiL_5Z7xB_89u7bzdFhc6QDQ3bLfB02SFGoiD4mssCW8fcVprUihB5uzPdb58"/>
+</div>
+<div class="min-w-0">
+<h3 class="font-semibold truncate text-slate-500">Marcos Lima</h3>
+<p class="text-sm text-slate-400 truncate">marcos.lima@cliente.com</p>
+</div>
+</div>
+<div class="hidden md:flex flex-col items-start w-32">
+<span class="text-xs uppercase tracking-wider text-slate-500 font-bold">Cargo</span>
+<span class="text-sm text-slate-500">Cliente</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="bg-slate-200/50 dark:bg-slate-800 text-slate-500 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+                        Inativo
+                    </span>
+<div class="flex items-center gap-1">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-card-dark p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4 group">
+<div class="flex items-center gap-4 flex-1">
+<div class="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border border-primary/30">
+<img class="h-full w-full object-cover" data-alt="Avatar feminino com cabelo curto loiro" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZ35ldWadHrnn1YKQm1-BPdCb_J9KCHDFFloHqBfAJZL6QWewZIeDmeSjO5TlK8teNGRKkRP8MDhMA3CgTkxg9zUVuFtBowT5PbI8eWdEO_amEX9S4baFoWBuX4VyBDKCGfezT6x4lz7eBe94J2cmkX8Vqlbhs8YaBaTRMOU1pjVODaCxrHl7GWn-HZMSo6F1cXoplPPBgwFdSczmGnOZhq_VRQtYkuLUxAzkmmSsjeCu7uxiiUSxMIRUMgWIqDmdMOD2Q_n1PSKQ"/>
+</div>
+<div class="min-w-0">
+<h3 class="font-semibold truncate">Fernanda Rocha</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 truncate">fernanda.rocha@corp.com</p>
+</div>
+</div>
+<div class="hidden md:flex flex-col items-start w-32">
+<span class="text-xs uppercase tracking-wider text-slate-500 font-bold">Cargo</span>
+<span class="text-sm">Cliente</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+                        Ativo
+                    </span>
+<div class="flex items-center gap-1">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<nav class="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-card-dark/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 safe-area-pb">
+<div class="max-w-md mx-auto flex justify-around py-3">
+<a class="flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+<span class="text-[10px] font-medium uppercase tracking-tight">Tickets</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">group_work</span>
+<span class="text-[10px] font-medium uppercase tracking-tight">Fila</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="text-[10px] font-medium uppercase tracking-tight">Relatórios</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined fill-1">person</span>
+<span class="text-[10px] font-bold uppercase tracking-tight">Perfil</span>
+</a>
+</div>
+</nav>
+<style>
+        .fill-1 { font-variation-settings: 'FILL' 1; }
+        .safe-area-pb { padding-bottom: env(safe-area-inset-bottom); }
+    </style>
+</body></html>

@@ -1,0 +1,209 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "description": "",
+                  "title": "Token",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_1": {
+                  "description": "",
+                  "title": "Codigo_Do_Chamado",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_2": {
+                  "description": "",
+                  "title": "Descrição",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "text",
+                "text_1",
+                "text_2"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Interage_no_chamado": {
+          "runAfter": {
+            "Retorno": [
+              "Succeeded"
+            ]
+          },
+          "type": "Http",
+          "inputs": {
+            "uri": "https://api.desk.ms/ChamadosSuporte/interagir",
+            "method": "PUT",
+            "headers": {
+              "Authorization": "@{variables('Token')}"
+            },
+            "body": {
+              "Chave": "@variables('Codigo_Chamado')",
+              "TChamado": {
+                "Descricao": "@variables('Mensagem')",
+                "CodStatus": "000001",
+                "CodFormaAtendimento": "000076"
+              },
+              "TIc": {
+                "Chave": {
+                  "278": "on",
+                  "280": "on"
+                }
+              }
+            }
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "Token": {
+          "runAfter": {},
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Token",
+                "type": "string",
+                "value": "@triggerBody()?['text']"
+              }
+            ]
+          }
+        },
+        "Codigo_do_Chamado": {
+          "runAfter": {
+            "Token": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Codigo_Chamado",
+                "type": "string",
+                "value": "@triggerBody()?['text_1']"
+              }
+            ]
+          }
+        },
+        "Mensagem": {
+          "runAfter": {
+            "Codigo_do_Chamado": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Mensagem",
+                "type": "string",
+                "value": "@triggerBody()?['text_2']"
+              }
+            ]
+          }
+        },
+        "Mensagem_de_retorno": {
+          "runAfter": {
+            "Interage_no_chamado": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@concat('Nova interação realizada no chamado: ', variables('Codigo_Chamado'))"
+        },
+        "Retorno": {
+          "runAfter": {
+            "Mensagem": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Retorno",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Organiza_retorno": {
+          "runAfter": {
+            "Mensagem_de_retorno": [
+              "Succeeded"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "Retorno",
+            "value": "@outputs('Mensagem_de_retorno')"
+          }
+        },
+        "Respond_to_the_agent": {
+          "runAfter": {
+            "Organiza_retorno": [
+              "Succeeded"
+            ]
+          },
+          "type": "Response",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "retorno": {
+                  "title": "Retorno",
+                  "description": "Mensagem de retorno",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "retorno": "@{variables('Retorno')}"
+            }
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

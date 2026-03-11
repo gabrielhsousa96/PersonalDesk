@@ -1,0 +1,6 @@
+kind: Variable
+name: DescricaoChamado
+scope: Conversation
+isExternalInitializationAllowed: false
+isOutputToExternalCallers: true
+initializationTimeoutInMilliseconds: 0

@@ -1,0 +1,11 @@
+<botcomponent schemaname="crdb8_deskManagerItSupportAgent.gpt.default">
+  <componenttype>15</componenttype>
+  <description>Um agente virtual especializado em triagem, abertura e consulta de chamados na plataforma DeskManager, operando exclusivamente via Microsoft Teams.</description>
+  <iscustomizable>0</iscustomizable>
+  <name>Boty - Agente de suporte Emccamp</name>
+  <parentbotid>
+    <schemaname>crdb8_deskManagerItSupportAgent</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b981",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#0f172a",
+                        "card-dark": "#1e293b",
+                        "input-dark": "#334155",
+                        "text-primary": "#f8fafc",
+                        "text-secondary": "#94a3b8",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-text-primary min-h-screen flex flex-col">
+<!-- Header Section -->
+<header class="flex items-center bg-background-light dark:bg-background-dark p-4 justify-between sticky top-0 z-10 border-b border-slate-200 dark:border-slate-800">
+<div class="text-slate-900 dark:text-text-primary flex size-10 items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-slate-900 dark:text-text-primary text-lg font-bold leading-tight tracking-tight flex-1 px-4">Gestão de Categorias</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-transparent text-slate-900 dark:text-text-primary">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto pb-24">
+<!-- Action Button -->
+<div class="flex px-4 py-4 justify-between items-center">
+<p class="text-text-secondary text-sm font-medium">Configure as categorias do sistema</p>
+<button class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white gap-2 text-sm font-bold shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span class="truncate">Nova Categoria</span>
+</button>
+</div>
+<!-- Categories Table/List -->
+<div class="px-4">
+<div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-card-dark">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50">
+<th class="px-4 py-3 text-xs font-semibold text-text-secondary uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">Categoria</th>
+<th class="px-4 py-3 text-xs font-semibold text-text-secondary uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">Tipo Relacionado</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<!-- Row 1 -->
+<tr>
+<td class="px-4 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900 dark:text-text-primary">Consulta, Dúvida, Orçamento, Avaliação</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                                    Solicitação / Atendimento
+                                </span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr>
+<td class="px-4 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900 dark:text-text-primary">Serviço, Suporte, Correção, Teste</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400">
+                                    Execução de Serviço
+                                </span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr>
+<td class="px-4 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900 dark:text-text-primary">Desempenho, Layout, Processo</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-500/10 text-purple-400">
+                                    Melhoria
+                                </span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr>
+<td class="px-4 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900 dark:text-text-primary">Relatório, Funcionalidade, Integração</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400">
+                                    Implementação
+                                </span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr>
+<td class="px-4 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900 dark:text-text-primary">Sistema travando, Cálculo errado, Botão não funciona</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-400">
+                                    Bug / Erro
+                                </span>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr>
+<td class="px-4 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900 dark:text-text-primary">Criar usuário, Alterar permissões, Liberar acesso</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-500/20 text-text-secondary">
+                                    Acesso
+                                </span>
+</td>
+</tr>
+<!-- Row 7 -->
+<tr>
+<td class="px-4 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900 dark:text-text-primary">Alterar cadastro, Modificar configuração, Trocar parâmetro</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400">
+                                    Alteração
+                                </span>
+</td>
+</tr>
+<!-- Row 8 -->
+<tr>
+<td class="px-4 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900 dark:text-text-primary">Exportar dados, Gerar relatório, Análise de informação</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400">
+                                    Relatório
+                                </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-card-dark px-4 pb-6 pt-2 z-20">
+<div class="flex gap-2">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-text-secondary hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">home</span>
+<p class="text-xs font-medium leading-normal">Início</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-text-secondary hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">bar_chart</span>
+<p class="text-xs font-medium leading-normal">Relatórios</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-text-secondary hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">category</span>
+<p class="text-xs font-medium leading-normal">Categorias</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<span class="material-symbols-outlined text-[24px] fill">settings</span>
+<p class="text-xs font-medium leading-normal">Ajustes</p>
+</a>
+</div>
+</nav>
+</body></html>

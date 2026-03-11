@@ -1,0 +1,13 @@
+kind: AdaptiveDialog
+modelDescription: "This tool can handle queries like these: Boa tarde, Bom dia, Olá, Ei, Oi"
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent: {}
+  actions:
+    - kind: BeginDialog
+      id: 3cN20P
+      dialog: crdb8_deskManagerItSupportAgent.topic.ConversationStart
+
+inputType: {}
+outputType: {}

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>API Documentation - Slate Theme</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#10221c",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-background-light dark:bg-background-dark border-b border-primary/20">
+<div class="flex items-center p-4 gap-4">
+<a class="flex items-center justify-center size-10 rounded-full hover:bg-primary/10 transition-colors" href="/config">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</a>
+<h1 class="text-xl font-bold tracking-tight">Documentação da API</h1>
+</div>
+<!-- Tabs -->
+<nav class="flex px-4 gap-6 overflow-x-auto no-scrollbar">
+<a class="pb-3 pt-2 text-sm font-semibold border-b-2 border-primary text-primary whitespace-nowrap" href="#">Introdução e Autenticação</a>
+<a class="pb-3 pt-2 text-sm font-semibold border-b-2 border-transparent text-slate-500 dark:text-slate-400 whitespace-nowrap" href="/docs">Acessar Swagger Interativo</a>
+</nav>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto p-4 space-y-8 pb-24">
+<!-- Documentation Section -->
+<section class="space-y-4">
+<div class="space-y-2">
+<h2 class="text-2xl font-bold">Obter token de Autenticação</h2>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Use este endpoint para gerar um token JWT temporário para chamadas autenticadas. O token expira em 24 horas.
+                </p>
+</div>
+<!-- Method and URL -->
+<div class="flex items-center gap-3 font-mono text-sm bg-slate-100 dark:bg-slate-800/50 p-3 rounded-lg border border-primary/10">
+<span class="bg-primary text-background-dark px-2 py-1 rounded font-bold">POST</span>
+<span class="text-slate-700 dark:text-slate-300">https://api.vagas.com/v1/auth/token</span>
+</div>
+<!-- Request Headers -->
+<div class="space-y-3">
+<h3 class="text-lg font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">key</span>
+                    Headers
+                </h3>
+<div class="code-block p-4 rounded-xl overflow-x-auto shadow-lg">
+<pre class="text-sm font-mono text-blue-300"><span class="text-pink-400">Content-Type</span>: <span class="text-green-400">application/json</span>
+<span class="text-pink-400">X-API-KEY</span>: <span class="text-green-400">sua_chave_de_acesso</span></pre>
+</div>
+</div>
+<!-- Request Body -->
+<div class="space-y-3">
+<h3 class="text-lg font-semibold">Parâmetros de Requisição (JSON)</h3>
+<div class="code-block p-4 rounded-xl overflow-x-auto shadow-lg">
+<pre class="text-sm font-mono text-slate-300">{
+  <span class="text-blue-400">"client_id"</span>: <span class="text-green-400">"ID_DO_CLIENTE"</span>,
+  <span class="text-blue-400">"client_secret"</span>: <span class="text-green-400">"SEGREDO_DO_CLIENTE"</span>,
+  <span class="text-blue-400">"grant_type"</span>: <span class="text-green-400">"client_credentials"</span>
+}</pre>
+</div>
+</div>
+<!-- Response -->
+<div class="space-y-3">
+<h3 class="text-lg font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+                    Resposta de Sucesso
+                </h3>
+<div class="code-block p-4 rounded-xl overflow-x-auto shadow-lg">
+<pre class="text-sm font-mono text-slate-300">{
+  <span class="text-blue-400">"access_token"</span>: <span class="text-green-400">"eyJhbGciOiJIUzI1NiIsInR..."</span>,
+  <span class="text-blue-400">"token_type"</span>: <span class="text-green-400">"Bearer"</span>,
+  <span class="text-blue-400">"expires_in"</span>: <span class="text-amber-400">86400</span>
+}</pre>
+</div>
+</div>
+</section>
+<!-- Interactive Docs Card -->
+<div class="mt-8 p-6 rounded-2xl bg-gradient-to-br from-primary/20 to-transparent border border-primary/20">
+<h4 class="font-bold text-lg mb-2">Testar Endpoints</h4>
+<p class="text-slate-600 dark:text-slate-400 text-sm mb-4">Consulte nossa documentação interativa para visualizar todos os caminhos disponíveis, parâmetros de carga útil e executar requisições ao vivo.</p>
+<a class="inline-flex items-center gap-2 text-primary font-semibold hover:underline" href="/docs">
+                Abrir Documentação Swagger Interativa
+                <span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+
+</main>
+<!-- Bottom Navigation -->
+<nav class="shrink-0 bg-[#0a1511] border-t border-slate-200 dark:border-slate-800 px-6 py-3">
+<div class="max-w-[1400px] mx-auto flex justify-around items-center">
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="/dashboard">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-medium">Dashboard</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="/users">
+<span class="material-symbols-outlined">group</span>
+<span class="text-[10px] font-medium">Usuários</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="/profile">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Perfil</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary hidden" id="config-nav-btn" href="/config">
+<span class="material-symbols-outlined font-variation-fill">settings</span>
+<span class="text-[10px] font-bold">Ajustes</span>
+</a>
+</div>
+</nav>
+<style>
+        .font-variation-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            try {
+                const parts = token.split('.');
+                if (parts.length === 3) {
+                    const payload = JSON.parse(atob(parts[1]));
+                    if (payload.sub) {
+                        const res = await fetch('/api/auth/me', { headers: { 'Authorization': `Bearer ${token}` } });
+                        if (res.ok) {
+                            const user = await res.json();
+                            if (user.profile.name === 'Administrator') {
+                                document.getElementById('config-nav-btn').classList.remove('hidden');
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Erro ao configurar menu bottom:", e);
+            }
+        }
+    });
+</script>
+<script src="/static/app.js"></script>
+</body></html>

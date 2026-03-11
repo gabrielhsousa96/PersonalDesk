@@ -1,0 +1,46 @@
+kind: ClosedListEntity
+items:
+  - id: 3OfTyq
+    displayName: Administrativo
+
+  - id: VpjBv0
+    displayName: Catraca
+
+  - id: g5kbuw
+    displayName: Compra
+
+  - id: qPsm1r
+    displayName: Entrega de Material
+
+  - id: rRUpp5
+    displayName: Hardware
+
+  - id: rUodSC
+    displayName: Impressoras
+
+  - id: e8zyw7
+    displayName: Kicker
+
+  - id: t1QCzG
+    displayName: Office 365
+
+  - id: jIEZ9S
+    displayName: Periféricos
+
+  - id: FAvoZk
+    displayName: Rede
+
+  - id: rln6lD
+    displayName: Salas de reunião
+
+  - id: 8d8nMd
+    displayName: Segurança
+
+  - id: KYXEHs
+    displayName: Servidores
+
+  - id: mvVFFh
+    displayName: Software
+
+  - id: 4yuH3q
+    displayName: Usuário

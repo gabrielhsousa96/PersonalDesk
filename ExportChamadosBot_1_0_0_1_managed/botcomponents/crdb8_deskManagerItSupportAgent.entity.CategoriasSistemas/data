@@ -1,0 +1,55 @@
+kind: ClosedListEntity
+smartMatchingEnabled: true
+items:
+  - id: 0qh8TA
+    displayName: Capys
+
+  - id: Yy5YZT
+    displayName: Construpoint
+
+  - id: CSI37g
+    displayName: Controlemp
+
+  - id: ucoMaH
+    displayName: Fusion
+
+  - id: QSxqYo
+    displayName: Neogrid
+
+  - id: RDLmJD
+    displayName: RM
+    synonyms:
+      - Nucleus
+      - Nucleos
+      - Projetos
+      - obras
+      - Globais
+      - Patrimonial
+      - Gestão Fiscal
+      - Gestão Financeira
+      - Gestão de Pessoas
+      - Gestão de Imóveis
+      - Faturamento
+      - Compras
+      - Estoque
+      - Gestão Contábil
+      - Folha de ponto
+      - Folha de Pagamento
+      - Fiscal
+      - Contábil
+      - Chronus
+
+  - id: II62pb
+    displayName: Salesforce
+
+  - id: 3su5CF
+    displayName: SOC
+
+  - id: zxHQeW
+    displayName: Total Bank
+
+  - id: fmATC8
+    displayName: Viabiliza
+
+  - id: oh3aM6
+    displayName: Usuários

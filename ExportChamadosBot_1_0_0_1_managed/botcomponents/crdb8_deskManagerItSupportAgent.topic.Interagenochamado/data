@@ -1,0 +1,124 @@
+kind: AdaptiveDialog
+modelDescription: Use este tópico quando o usuário quiser adicionar informações a um chamado já aberto. Isso inclui enviar anexos, responder a uma pergunta do técnico, adicionar comentários ou enviar evidências/prints para um ticket específico.
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent: {}
+  actions:
+    - kind: InvokeFlowAction
+      id: invokeFlowAction_OKMUfC
+      input: {}
+      output:
+        binding:
+          token: Topic.Token
+
+      flowId: 8575b34a-e7e7-f011-8544-7c1e526a9a9f
+
+    - kind: Question
+      id: question_nQU9Od
+      interruptionPolicy:
+        allowInterruption: true
+
+      variable: init:Topic.MensagemInteracao
+      prompt: Certo! Pode digitar abaixo o que você gostaria de acrescentar ao chamado. ✍️
+      entity: StringPrebuiltEntity
+
+    - kind: InvokeFlowAction
+      id: invokeFlowAction_GUeRJ5
+      input:
+        binding:
+          text: =Global.Codigodochamado
+          text_1: =Global.Codigodochamado
+          text_2: =Topic.MensagemInteracao
+
+      output:
+        binding:
+          retorno: Topic.Retorno
+
+      flowId: 3862f382-02e8-f011-8544-7c1e526a9a9f
+
+    - kind: Question
+      id: question_ISkgGZ
+      interruptionPolicy:
+        allowInterruption: true
+
+      variable: init:Topic.Anexar
+      prompt: Gostaria de aproveitar e **adicionar um anexo** (print ou arquivo) a este mesmo chamado?
+      entity:
+        kind: EmbeddedEntity
+        definition:
+          kind: ClosedListEntity
+          items:
+            - id: Sim
+              displayName: Sim
+
+            - id: Não, voltar ao menu inicial
+              displayName: Não, voltar ao menu inicial
+
+    - kind: ConditionGroup
+      id: conditionGroup_H7gnZK
+      conditions:
+        - id: conditionItem_5jP7lg
+          condition: =Topic.Anexar = 'crdb8_deskManagerItSupportAgent.topic.Interagenochamado.main.question_ISkgGZ'.Sim
+          actions:
+            - kind: BeginDialog
+              id: ZfoNBc
+              dialog: crdb8_deskManagerItSupportAgent.topic.Boty-Anexaarquivo
+
+        - id: conditionItem_2QZiGf
+          condition: =Topic.Anexar = 'crdb8_deskManagerItSupportAgent.topic.Interagenochamado.main.question_ISkgGZ'.'Não, voltar ao menu inicial'
+          actions:
+            - kind: SendActivity
+              id: sendActivity_lWxP5I
+              activity: |-
+                Prontinho! 📝
+                Acabei de atualizar o chamado **{Global.Codigodochamado}** com a sua mensagem.
+
+            - kind: InvokeFlowAction
+              id: invokeFlowAction_OfkODy
+              input:
+                binding:
+                  number: =Global.Codigo_Solicitante
+                  text: =Topic.Token
+                  text_1: =Global.Codigodochamado
+
+              output:
+                binding:
+                  datacriacao: Topic.Data_criacao_chamado
+                  numerochamado: Topic.NumeroChamado
+                  ultimadescricao: Topic.UltimaDescricao
+                  ultimooperador: Topic.UltimoOperador
+                  ultimostatus: Topic.UltimoStatus
+
+              flowId: fd2d7cbf-eae7-f011-8544-7c1e526a9a9f
+
+            - kind: SendActivity
+              id: sendActivity_0Ige90
+              activity: |+
+                Segue a descrição deste chamado:
+                - 🆔 **Codigo do chamado:** {Topic.NumeroChamado}****
+                - 📅 **Data de Criação:** {Topic.Data_criacao_chamado}****
+                - 👨‍💻 **Operador responsavel:** {Topic.UltimoOperador}****
+                - 🔄 **Status:** {Topic.UltimoStatus}
+                - 💬 **Ultima interação:**
+
+                {Topic.UltimaDescricao}
+
+            - kind: BeginDialog
+              id: TgkTCn
+              dialog: crdb8_deskManagerItSupportAgent.topic.MenuPrincipal
+
+      elseActions:
+        - kind: SendActivity
+          id: sendActivity_Crg8tX
+          activity: |-
+            Não entendi a sua solicitação. 
+            Vou te enviar de volta ao Menu principal.
+            Um momento por favor.
+
+        - kind: BeginDialog
+          id: 0aoesJ
+          dialog: crdb8_deskManagerItSupportAgent.topic.MenuPrincipal
+
+inputType: {}
+outputType: {}

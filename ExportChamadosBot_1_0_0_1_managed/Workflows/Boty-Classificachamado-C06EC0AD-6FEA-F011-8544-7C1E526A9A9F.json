@@ -1,0 +1,519 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "description": "",
+                  "title": "Token",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_1": {
+                  "description": "",
+                  "title": "Categoria",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "text",
+                "text_1"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Busca_lista_de_categorias": {
+          "type": "Http",
+          "inputs": {
+            "uri": "https://api.desk.ms/AutoCategorias/lista",
+            "method": "POST",
+            "headers": {
+              "Authorization": "@{triggerBody()?['text']}"
+            },
+            "body": {
+              "Pesquisa": "@triggerBody()?['text_1']",
+              "Ativo": "S",
+              "Colunas": {
+                "Chave": "on",
+                "Assunto": "on"
+              },
+              "Ordem": [
+                {
+                  "Coluna": "Assunto",
+                  "Direcao": "true"
+                }
+              ]
+            }
+          },
+          "runAfter": {
+            "Resposta_final": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "Token": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Token",
+                "type": "string",
+                "value": "@triggerBody()?['text']"
+              }
+            ]
+          },
+          "runAfter": {
+            "Classificacao": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Chave_Categoria": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Chave Categoria",
+                "type": "integer"
+              }
+            ]
+          },
+          "runAfter": {
+            "Token": [
+              "Succeeded"
+            ]
+          }
+        },
+        "OrganizaJsonCategorias": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('Busca_lista_de_categorias')",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "root": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Chave": {
+                        "type": "integer"
+                      },
+                      "Assunto": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "Chave",
+                      "Assunto"
+                    ]
+                  }
+                },
+                "total": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Busca_lista_de_categorias": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Switch": {
+          "type": "Switch",
+          "expression": "@length(body('OrganizaJsonCategorias')?['root'])",
+          "default": {
+            "actions": {
+              "Variavel_Status": {
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "Status",
+                  "value": "Multiplas"
+                },
+                "runAfter": {
+                  "For_each": [
+                    "SUCCEEDED"
+                  ]
+                }
+              },
+              "For_each": {
+                "type": "Foreach",
+                "foreach": "@outputs('OrganizaJsonCategorias')?['body']?['root']",
+                "actions": {
+                  "Append_to_array_variable": {
+                    "type": "AppendToArrayVariable",
+                    "inputs": {
+                      "name": "Resposta final",
+                      "value": "@items('For_each')?['Assunto']"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "cases": {
+            "Case": {
+              "actions": {
+                "Categoria_0": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Chave Categoria",
+                    "value": 8985
+                  }
+                },
+                "Assunto_0": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Assunto Categoria",
+                    "value": "Suporte - Sistema - Sem classificação - Não encontrei o que procurava"
+                  },
+                  "runAfter": {
+                    "Categoria_0": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Status_0": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Status",
+                    "value": "Nao Encontrado"
+                  },
+                  "runAfter": {
+                    "Assunto_0": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "case": 0
+            },
+            "Case 2": {
+              "actions": {
+                "Categoria_1": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Chave Categoria",
+                    "value": "@first(body('OrganizaJsonCategorias')?['root'])?['Chave']"
+                  }
+                },
+                "Assunto_1": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Assunto Categoria",
+                    "value": "@first(body('OrganizaJsonCategorias')?['root'])?['Assunto']"
+                  },
+                  "runAfter": {
+                    "Categoria_1": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Status_1": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Status",
+                    "value": "Exata"
+                  },
+                  "runAfter": {
+                    "Assunto_1": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "case": 1
+            }
+          },
+          "runAfter": {
+            "OrganizaJsonCategorias": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Assunto_Categoria": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Assunto Categoria",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Chave_Categoria": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Classificacao": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Classificacao",
+                "type": "string",
+                "value": "@triggerBody()?['text_1']"
+              }
+            ]
+          },
+          "runAfter": {
+            "Tentativa": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Resposta_final": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Resposta final",
+                "type": "array"
+              }
+            ]
+          },
+          "runAfter": {
+            "Status_Busca": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Status_Busca": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Status",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Assunto_Categoria": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Tentativa": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Tentativa",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Switch_1": {
+          "type": "Switch",
+          "expression": "@variables('Status')",
+          "default": {
+            "actions": {}
+          },
+          "cases": {
+            "Case 3": {
+              "actions": {
+                "Respond_to_the_agent": {
+                  "type": "Response",
+                  "kind": "Skills",
+                  "inputs": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "codigo": {
+                          "title": "Codigo",
+                          "description": "",
+                          "type": "string",
+                          "x-ms-content-hint": "TEXT",
+                          "x-ms-dynamically-added": true
+                        },
+                        "assunto": {
+                          "title": "Assunto",
+                          "description": "",
+                          "type": "string",
+                          "x-ms-content-hint": "TEXT",
+                          "x-ms-dynamically-added": true
+                        },
+                        "status": {
+                          "title": "Status",
+                          "description": "",
+                          "type": "string",
+                          "x-ms-content-hint": "TEXT",
+                          "x-ms-dynamically-added": true
+                        },
+                        "resposta": {
+                          "title": "Resposta",
+                          "description": "",
+                          "type": "string",
+                          "x-ms-content-hint": "TEXT",
+                          "x-ms-dynamically-added": true
+                        }
+                      },
+                      "additionalProperties": {}
+                    },
+                    "statusCode": 200,
+                    "body": {
+                      "codigo": "@{variables('Chave Categoria')}",
+                      "assunto": "@{variables('Assunto Categoria')}",
+                      "status": "@{variables('Status')}",
+                      "resposta": "@{variables('Resposta final')}"
+                    }
+                  }
+                }
+              },
+              "case": "Nao Encontrado"
+            },
+            "Case 4": {
+              "actions": {
+                "Respond_to_the_agent_1": {
+                  "type": "Response",
+                  "kind": "Skills",
+                  "inputs": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "codigo": {
+                          "title": "Codigo",
+                          "description": "",
+                          "type": "string",
+                          "x-ms-content-hint": "TEXT",
+                          "x-ms-dynamically-added": true
+                        },
+                        "assunto": {
+                          "title": "Assunto",
+                          "description": "",
+                          "type": "string",
+                          "x-ms-content-hint": "TEXT",
+                          "x-ms-dynamically-added": true
+                        },
+                        "status": {
+                          "title": "Status",
+                          "description": "",
+                          "type": "string",
+                          "x-ms-content-hint": "TEXT",
+                          "x-ms-dynamically-added": true
+                        },
+                        "resposta": {
+                          "title": "Resposta",
+                          "description": "",
+                          "type": "string",
+                          "x-ms-content-hint": "TEXT",
+                          "x-ms-dynamically-added": true
+                        }
+                      },
+                      "additionalProperties": {}
+                    },
+                    "statusCode": 200,
+                    "body": {
+                      "codigo": "@{variables('Chave Categoria')}",
+                      "assunto": "@{variables('Assunto Categoria')}",
+                      "status": "@{variables('Status')}",
+                      "resposta": "@{variables('Resposta final')}"
+                    }
+                  }
+                }
+              },
+              "case": "Exata"
+            },
+            "Case 5": {
+              "actions": {
+                "Respond_to_the_agent_2": {
+                  "type": "Response",
+                  "kind": "Skills",
+                  "inputs": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "codigo": {
+                          "title": "Codigo",
+                          "description": "",
+                          "type": "string",
+                          "x-ms-content-hint": "TEXT",
+                          "x-ms-dynamically-added": true
+                        },
+                        "assunto": {
+                          "title": "Assunto",
+                          "description": "",
+                          "type": "string",
+                          "x-ms-content-hint": "TEXT",
+                          "x-ms-dynamically-added": true
+                        },
+                        "status": {
+                          "title": "Status",
+                          "description": "",
+                          "type": "string",
+                          "x-ms-content-hint": "TEXT",
+                          "x-ms-dynamically-added": true
+                        },
+                        "resposta": {
+                          "title": "Resposta",
+                          "description": "",
+                          "type": "string",
+                          "x-ms-content-hint": "TEXT",
+                          "x-ms-dynamically-added": true
+                        }
+                      },
+                      "additionalProperties": {}
+                    },
+                    "statusCode": 200,
+                    "body": {
+                      "codigo": "@{variables('Chave Categoria')}",
+                      "assunto": "@{variables('Assunto Categoria')}",
+                      "status": "@{variables('Status')}",
+                      "resposta": "@{variables('Resposta final')}"
+                    }
+                  }
+                }
+              },
+              "case": "Multiplas"
+            }
+          },
+          "runAfter": {
+            "Switch": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Registro - Desk de Tickets</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b77f",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#0f172a",
+                        "slate-card": "#1e293b",
+                        "slate-input": "#334155"
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .gradient-title {
+            background: linear-gradient(to right, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header / TopAppBar Component -->
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between">
+<div class="text-primary flex size-12 shrink-0 items-center justify-center">
+<span class="material-symbols-outlined text-[32px]">confirmation_number</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Desk de Tickets</h2>
+</div>
+<!-- Main Content Container -->
+<div class="flex flex-1 items-center justify-center p-4">
+<div class="w-full max-w-[480px] bg-white dark:bg-slate-card rounded-xl p-8 shadow-2xl border border-slate-200 dark:border-slate-700/50">
+<div class="text-center mb-8">
+<h1 class="gradient-title tracking-tight text-[32px] font-bold leading-tight pb-2">Crie sua conta</h1>
+<p class="text-slate-600 dark:text-slate-400 text-base font-normal leading-normal">Preencha os dados abaixo para começar</p>
+</div>
+<form class="space-y-5">
+<!-- Full Name -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-700 dark:text-slate-400 text-sm font-medium leading-normal">Nome Completo</label>
+<div class="relative">
+<input class="form-input flex w-full rounded-lg text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/50 border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-input h-12 placeholder:text-slate-400 p-[12px] text-base font-normal" placeholder="Digite seu nome completo" type="text" value=""/>
+</div>
+</div>
+<!-- E-mail -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-700 dark:text-slate-400 text-sm font-medium leading-normal">E-mail</label>
+<div class="relative">
+<input class="form-input flex w-full rounded-lg text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/50 border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-input h-12 placeholder:text-slate-400 p-[12px] text-base font-normal" placeholder="exemplo@email.com" type="email" value=""/>
+</div>
+</div>
+<!-- Password -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-700 dark:text-slate-400 text-sm font-medium leading-normal">Senha</label>
+<div class="relative">
+<input class="form-input flex w-full rounded-lg text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/50 border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-input h-12 placeholder:text-slate-400 p-[12px] text-base font-normal" placeholder="Crie uma senha forte" type="password" value=""/>
+</div>
+</div>
+<!-- Confirm Password -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-700 dark:text-slate-400 text-sm font-medium leading-normal">Confirmar Senha</label>
+<div class="relative">
+<input class="form-input flex w-full rounded-lg text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/50 border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-input h-12 placeholder:text-slate-400 p-[12px] text-base font-normal" placeholder="Repita sua senha" type="password" value=""/>
+</div>
+</div>
+<!-- Primary Button -->
+<div class="pt-4">
+<button class="w-full bg-primary hover:bg-[#059669] transition-colors duration-200 text-white font-bold py-4 px-4 rounded-lg flex items-center justify-center gap-2" type="submit">
+<span>Registrar</span>
+<span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+</div>
+</form>
+<!-- Footer Link -->
+<div class="mt-8 text-center">
+<p class="text-slate-600 dark:text-slate-400 text-sm">
+                        Já tem uma conta? 
+                        <a class="text-primary hover:text-[#059669] font-semibold transition-colors" href="#">Login</a>
+</p>
+</div>
+</div>
+</div>
+<div class="h-8 bg-transparent"></div>
+</div>
+</body></html>

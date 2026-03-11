@@ -1,0 +1,6 @@
+kind: Variable
+name: CodigoChamado1
+scope: User
+isExternalInitializationAllowed: true
+isOutputToExternalCallers: true
+initializationTimeoutInMilliseconds: 0

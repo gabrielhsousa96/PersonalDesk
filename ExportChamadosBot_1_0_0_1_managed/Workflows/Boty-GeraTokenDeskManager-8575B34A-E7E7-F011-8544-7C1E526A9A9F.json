@@ -1,0 +1,110 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {},
+              "required": []
+            }
+          },
+          "metadata": {
+            "flowSystemMetadata": {
+              "flowKind": "Stateful"
+            }
+          }
+        }
+      },
+      "actions": {
+        "Chama_Token": {
+          "type": "Http",
+          "inputs": {
+            "uri": "https://api.desk.ms/Login/autenticar",
+            "method": "POST",
+            "headers": {
+              "Authorization": "7aee79e23ec6dffe3ff71fece6f31f9aa45e6ff0",
+              "JsonPath": "true"
+            },
+            "body": {
+              "PublicKey": "15ac0308c90001f7f11b18cc717a8d058335411d"
+            }
+          },
+          "runAfter": {},
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "Organiza_Token": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('Chama_Token')",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "access_token": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Chama_Token": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Respond_to_the_agent": {
+          "type": "Response",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "title": "Token",
+                  "description": "Token de Autenticação DeskManager",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "token": "@{body('Organiza_Token')?['access_token']}"
+            }
+          },
+          "runAfter": {
+            "Organiza_Token": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "outputs": {},
+      "description": "This flow starts when manually triggered. It sends a POST request to an external authentication API to obtain a token. The response is then parsed to extract the authentication token. Finally, the flow returns the token as a response to the requester. Each step depends on the successful completion of the previous one, ensuring the process is sequential and the token is securely retrieved and delivered."
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

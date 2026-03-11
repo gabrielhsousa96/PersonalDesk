@@ -1,0 +1,107 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent: {}
+  actions:
+    - kind: InvokeFlowAction
+      id: invokeFlowAction_njPP1z
+      input: {}
+      output:
+        binding:
+          token: Topic.Token
+
+      flowId: 8575b34a-e7e7-f011-8544-7c1e526a9a9f
+
+    - kind: InvokeFlowAction
+      id: invokeFlowAction_pRwmWY
+      input:
+        binding:
+          number: =Global.Codigo_Solicitante
+          text: =Global.Descricao
+          text_1: =Topic.Token
+          text_2: =Global.Codigo
+          text_3: =Global.Assunto
+
+      output:
+        binding:
+          chamado: Global.Chamado
+
+      flowId: 43c9d254-90ec-f011-8407-6045bdd61acf
+
+    - kind: InvokeFlowAction
+      id: invokeFlowAction_z73DmL
+      input:
+        binding:
+          number: =Global.Codigo_Solicitante
+          text: =Topic.Token
+          text_1: =Global.Chamado
+
+      output:
+        binding:
+          numerochamado: Topic.NumeroChamado
+          ultimadescricao: Topic.UltimaDescricao
+          ultimooperador: Topic.UltimoOperador
+          ultimostatus: Topic.UltimoStatus
+
+      flowId: fd2d7cbf-eae7-f011-8544-7c1e526a9a9f
+
+    - kind: Question
+      id: question_f8EA8o
+      interruptionPolicy:
+        allowInterruption: true
+
+      variable: init:Topic.Var1
+      prompt: |-
+        ✅ **Tudo certo! Chamado aberto com sucesso.**  
+
+        🆔 **Número: {Global.Chamado}**  
+
+        📎 **Deseja anexar algum print ou arquivo para ajudar na análise?**
+      entity:
+        kind: EmbeddedEntity
+        definition:
+          kind: ClosedListEntity
+          items:
+            - id: Sim
+              displayName: Sim
+
+            - id: Não, voltar ao Menu
+              displayName: Não, voltar ao Menu
+
+            - id: Não, Finalizar chamado
+              displayName: Não, Finalizar chamado
+
+    - kind: ConditionGroup
+      id: conditionGroup_253F91
+      conditions:
+        - id: conditionItem_qs2tZl
+          condition: =Topic.Var1 = 'crdb8_deskManagerItSupportAgent.topic.Boty-Abrechamado.main.question_f8EA8o'.Sim
+          actions:
+            - kind: BeginDialog
+              id: VywzwR
+              dialog: crdb8_deskManagerItSupportAgent.topic.Boty-Anexaarquivo
+
+        - id: conditionItem_94OfwE
+          condition: =Topic.Var1 = 'crdb8_deskManagerItSupportAgent.topic.Boty-Abrechamado.main.question_f8EA8o'.'Não, voltar ao Menu'
+          actions:
+            - kind: BeginDialog
+              id: uPseIF
+              dialog: crdb8_deskManagerItSupportAgent.topic.MenuPrincipal
+
+        - id: conditionItem_yNog4b
+          condition: =Topic.Var1 = 'crdb8_deskManagerItSupportAgent.topic.Boty-Abrechamado.main.question_f8EA8o'.'Não, Finalizar chamado'
+          actions:
+            - kind: SendActivity
+              id: sendActivity_kcjfIc
+              activity: |-
+                Ok!
+                Em breve nossa equipe vai entrar em contato com voce para tratar sobre o seu chamado.
+                Seguimos a disposição.
+                Até Breve!
+
+            - kind: CancelAllDialogs
+              id: kLCdGW
+
+inputType: {}
+outputType: {}

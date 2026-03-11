@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Systems Analyst Portfolio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#10B981", // Electric Emerald
+                        "background-light": "#F8FAFC",
+                        "background-dark": "#0F172A", // Deep Charcoal
+                        "surface-dark": "#1E293B",
+                        "surface-light": "#FFFFFF",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                    },
+                },
+            },
+        };
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen relative overflow-x-hidden transition-colors duration-300">
+<nav class="flex justify-between items-center px-6 py-4 backdrop-blur-md bg-surface-light/80 dark:bg-background-dark/80 sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center space-x-2">
+<span class="material-icons text-primary">data_object</span>
+<span class="font-bold text-lg tracking-tight">Sys.Analyst</span>
+</div>
+<button class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition">
+<span class="material-icons">menu</span>
+</button>
+</nav>
+<main class="px-6 py-10 pb-32">
+<header class="mb-12 text-center">
+<div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span>Available for new projects</span>
+</div>
+<h1 class="text-4xl font-bold leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">
+                Transforming Data into <br/>
+<span class="text-primary italic">Intelligence</span> &amp; <span class="text-primary italic">Automation</span>
+</h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg mb-8 max-w-sm mx-auto">
+                Specializing in building robust data pipelines, AI agents, and automating complex workflows.
+            </p>
+</header>
+<section class="mb-12">
+<h2 class="text-xl font-semibold mb-6 flex items-center space-x-2">
+<span class="material-icons text-primary text-xl">layers</span>
+<span>Tech Stack</span>
+</h2>
+<div class="grid grid-cols-3 gap-4">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center space-y-2 shadow-sm">
+<span class="material-icons text-blue-500 text-3xl">insights</span>
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">BI &amp; Analytics</span>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center space-y-2 shadow-sm">
+<span class="material-icons text-purple-500 text-3xl">smart_toy</span>
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">AI Agents</span>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center space-y-2 shadow-sm">
+<span class="material-icons text-orange-500 text-3xl">precision_manufacturing</span>
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">Automation</span>
+</div>
+</div>
+</section>
+<section>
+<h2 class="text-xl font-semibold mb-6 flex items-center space-x-2">
+<span class="material-icons text-primary text-xl">work</span>
+<span>Featured Projects</span>
+</h2>
+<div class="space-y-6">
+<div class="group relative bg-surface-light dark:bg-surface-dark rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-lg overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-16 -mt-16 transition-all duration-500 group-hover:bg-primary/20"></div>
+<div class="relative z-10">
+<div class="flex items-center space-x-2 mb-3">
+<span class="px-2 py-1 bg-blue-500/10 text-blue-500 dark:text-blue-400 text-xs font-semibold rounded-md">Migration</span>
+<span class="px-2 py-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-md">SQL</span>
+</div>
+<h3 class="text-lg font-bold mb-2">Enterprise Report Migration</h3>
+<p class="text-sm text-slate-600 dark:text-slate-400 mb-4 line-clamp-2">
+                            Successfully migrated legacy reporting systems to a modern cloud-based BI stack, improving query performance by 40%.
+                        </p>
+<a class="inline-flex items-center text-sm font-medium text-primary hover:text-primary/80 transition" href="#">
+                            View Case Study <span class="material-icons text-sm ml-1">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="group relative bg-surface-light dark:bg-surface-dark rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-lg overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl -mr-16 -mt-16 transition-all duration-500 group-hover:bg-purple-500/20"></div>
+<div class="relative z-10">
+<div class="flex items-center space-x-2 mb-3">
+<span class="px-2 py-1 bg-purple-500/10 text-purple-600 dark:text-purple-400 text-xs font-semibold rounded-md">AI Agents</span>
+<span class="px-2 py-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-md">Python</span>
+</div>
+<h3 class="text-lg font-bold mb-2">Intelligent Customer Bot</h3>
+<p class="text-sm text-slate-600 dark:text-slate-400 mb-4 line-clamp-2">
+                            Developed a context-aware LLM agent to handle tier-1 support queries, reducing ticket resolution time by 60%.
+                        </p>
+<a class="inline-flex items-center text-sm font-medium text-primary hover:text-primary/80 transition" href="#">
+                            View Case Study <span class="material-icons text-sm ml-1">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+</main>
+<button class="fixed bottom-6 right-6 flex items-center justify-center space-x-2 bg-primary text-white px-5 py-4 rounded-full shadow-2xl hover:bg-emerald-600 transition-transform transform hover:scale-105 z-50">
+<span class="material-icons">auto_awesome</span>
+<span class="font-bold">Ask my AI</span>
+</button>
+
+</body></html>

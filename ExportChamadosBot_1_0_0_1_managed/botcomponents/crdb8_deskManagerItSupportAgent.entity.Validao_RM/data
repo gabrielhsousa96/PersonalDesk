@@ -1,0 +1,49 @@
+kind: ClosedListEntity
+smartMatchingEnabled: true
+items:
+  - id: Xn8LZ3
+    displayName: Chronus
+    synonyms:
+      - RM Chronus
+
+  - id: FHHO6O
+    displayName: Contábil
+
+  - id: BTWOjW
+    displayName: Fiscal
+    synonyms:
+      - Gestão Fiscal
+      - RM Gestão Fiscal
+
+  - id: d8ms8d
+    displayName: Folha de Pagamento
+
+  - id: zba7lJ
+    displayName: Gestão de Estoque
+    synonyms:
+      - Faturamento
+      - Compras
+      - Núcleos
+
+  - id: Opz5IX
+    displayName: Gestão de Imóveis
+    synonyms:
+      - SGI
+
+  - id: JDlbOo
+    displayName: Gestão de Pessoas
+
+  - id: Sp9HD0
+    displayName: Gestão Financeira
+
+  - id: IUyNgv
+    displayName: Gestão Patrimonial
+
+  - id: Jt5vGT
+    displayName: Globais
+
+  - id: xOFZ3Z
+    displayName: Obras e Projetos
+    synonyms:
+      - Obras
+      - Projetos

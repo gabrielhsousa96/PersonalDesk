@@ -1,0 +1,6 @@
+kind: Variable
+name: Pesquisa
+scope: User
+isExternalInitializationAllowed: true
+isOutputToExternalCallers: true
+initializationTimeoutInMilliseconds: 0

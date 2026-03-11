@@ -1,0 +1,304 @@
+kind: AdaptiveDialog
+modelDescription: Use este tópico quando o usuário quiser saber o andamento de uma solicitação existente, verificar o status de um ticket, buscar o histórico de chamados ou perguntar "como está meu pedido".
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent: {}
+  actions:
+    - kind: InvokeFlowAction
+      id: invokeFlowAction_tUdBht
+      input: {}
+      output:
+        binding:
+          token: Topic.Token
+
+      flowId: 8575b34a-e7e7-f011-8544-7c1e526a9a9f
+
+    - kind: SetVariable
+      id: setVariable_zxr33d
+      variable: Global.Codigodochamado
+      value: =Blank()
+
+    - kind: SetVariable
+      id: setVariable_r5FtgV
+      variable: Global.RespostaDoChamado
+      value: =Blank()
+
+    - kind: ConditionGroup
+      id: conditionGroup_5u21ks
+      conditions:
+        - id: conditionItem_T9aHXo
+          condition: =Global.Codigo_Solicitante = 0 || Global.Codigo_Solicitante = 1851
+          actions:
+            - kind: Question
+              id: question_4JtOaH
+              interruptionPolicy:
+                allowInterruption: true
+
+              alwaysPrompt: true
+              variable: Topic.CodigoChamado
+              prompt: |-
+                Vi que não temos nenhum chamado seu em aberto no momento.
+                Voce quer falar sobre algum outro chamado?
+                **(Digite apenas o codigo do chamado 0126-000000 ou "voltar" para retornar ao menu principal)**
+              entity:
+                kind: StringPrebuiltEntity
+                sensitivityLevel: None
+
+            - kind: ConditionGroup
+              id: conditionGroup_ijA1AA
+              conditions:
+                - id: conditionItem_Fl2HwT
+                  condition: =Topic.CodigoChamado in "Voltar, Não"
+                  actions:
+                    - kind: BeginDialog
+                      id: TeS2wj
+                      dialog: crdb8_deskManagerItSupportAgent.topic.MenuPrincipal
+
+              elseActions:
+                - kind: InvokeFlowAction
+                  id: invokeFlowAction_prQRLR
+                  input:
+                    binding:
+                      number: =Global.Codigo_Solicitante
+                      text: =Topic.Token
+                      text_1: =Topic.CodigoChamado
+
+                  output:
+                    binding:
+                      numerochamado: Topic.NumeroChamado
+                      ultimadescricao: Topic.UltimaDescricao
+                      ultimooperador: Topic.UltimoOperador
+                      ultimostatus: Topic.UltimoStatus
+
+                  flowId: fd2d7cbf-eae7-f011-8544-7c1e526a9a9f
+
+                - kind: Question
+                  id: question_9W7joQ
+                  interruptionPolicy:
+                    allowInterruption: true
+
+                  alwaysPrompt: true
+                  variable: init:Topic.Var2
+                  prompt: |-
+                    Segue a descrição deste chamado:
+                    - 🆔 **Codigo do chamado:** {Topic.NumeroChamado}
+                    - 📅 **Data de Criação:** {Topic.DataCriacao}
+                    - 👨‍💻 **Operador responsavel:** {Topic.UltimoOperador}
+                    - 🔄 **Status:** {Topic.UltimoStatus}
+                    - 💬 **Ultima interação:**
+
+                    {Topic.UltimaDescricao}
+
+
+                    Voce deseja interagir neste chamado?
+                  entity:
+                    kind: EmbeddedEntity
+                    definition:
+                      kind: ClosedListEntity
+                      items:
+                        - id: Sim
+                          displayName: Sim
+
+                        - id: Não, retornar ao menu
+                          displayName: Não, retornar ao menu
+
+                - kind: SetVariable
+                  id: setVariable_lLCe1I
+                  variable: Topic.CodigoChamado
+                  value: =Blank()
+
+                - kind: ConditionGroup
+                  id: conditionGroup_FY76Ca
+                  conditions:
+                    - id: conditionItem_ZEVMbL
+                      condition: =Topic.Var2 = 'crdb8_deskManagerItSupportAgent.topic.Consultarumchamado.main.question_9W7joQ'.Sim
+                      actions:
+                        - kind: BeginDialog
+                          id: kSc7PC
+                          dialog: crdb8_deskManagerItSupportAgent.topic.Boty-Anexaarquivo
+
+                    - id: conditionItem_Wjshvo
+                      condition: =Topic.Var2 = 'crdb8_deskManagerItSupportAgent.topic.Consultarumchamado.main.question_9W7joQ'.'Não, retornar ao menu'
+                      actions:
+                        - kind: SendActivity
+                          id: sendActivity_2OAfdr
+                          activity: |-
+                            Ok!
+                            Vou te redirecionar ao menu principal.
+
+                        - kind: BeginDialog
+                          id: YaVkMY
+                          dialog: crdb8_deskManagerItSupportAgent.topic.MenuPrincipal
+
+                  elseActions:
+                    - kind: SendActivity
+                      id: sendActivity_4wHQDz
+                      activity: |-
+                        Não entendi a sua solicitação. 
+                        Vou te mandar para o menu principal.
+
+                    - kind: BeginDialog
+                      id: qGqqOW
+                      dialog: crdb8_deskManagerItSupportAgent.topic.MenuPrincipal
+
+      elseActions:
+        - kind: InvokeFlowAction
+          id: invokeFlowAction_LZcXEk
+          input:
+            binding:
+              number: =Global.Codigo_Solicitante
+              text: =Topic.Token
+
+          output:
+            binding:
+              assuntochamado: Topic.AssuntoChamado
+              datacriacao: Topic.DataCriacao
+              numerochamado: Topic.NumeroChamado
+              ultimadescricao: Topic.UltimaDescricao
+              ultimooperador: Topic.UltimoOperador
+              ultimostatus: Topic.UltimoStatus
+
+          flowId: 864a3335-bcec-f011-8407-6045bdd61acf
+
+        - kind: SetVariable
+          id: setVariable_Yl2XK5
+          variable: Global.Codigodochamado
+          value: =Blank()
+
+        - kind: Question
+          id: question_FPMUGN
+          interruptionPolicy:
+            allowInterruption: true
+
+          alwaysPrompt: true
+          variable: Global.Codigodochamado
+          prompt: |-
+            Este é o ultimo chamado que voce abriu:
+            - 🆔 **Codigo do chamado:** {Topic.NumeroChamado}
+            - 📅 **Data de Criação:** {Topic.DataCriacao}
+            - 📝 **Assunto:** {Topic.AssuntoChamado}
+            - 👨‍💻 **Operador responsavel:** {Topic.UltimoOperador}
+            - 🔄 **Status:** {Topic.UltimoStatus}
+            - 💬 **Descricao:**
+
+            {Topic.UltimaDescricao}
+
+
+            Voce quer falar sobre um outro chamado?
+            Digite apenas o codigo **(0126-000000)** ou digite **Interagir** para criar uma nova interação neste mesmo chamado. Se preferir voltar ao menu inicial, é só digitar **Voltar**
+          entity:
+            kind: StringPrebuiltEntity
+            sensitivityLevel: None
+
+        - kind: ConditionGroup
+          id: conditionGroup_DovoBS
+          conditions:
+            - id: conditionItem_xZ6Qz8
+              condition: =Global.Codigodochamado = "Voltar"
+              actions:
+                - kind: BeginDialog
+                  id: dlXr5x
+                  dialog: crdb8_deskManagerItSupportAgent.topic.MenuPrincipal
+
+            - id: conditionItem_o953rk
+              condition: =Global.Codigodochamado = "Interagir"
+              actions:
+                - kind: BeginDialog
+                  id: ytFxpg
+                  dialog: crdb8_deskManagerItSupportAgent.topic.Interagenochamado
+
+        - kind: InvokeFlowAction
+          id: invokeFlowAction_xVzF4w
+          input:
+            binding:
+              number: =Global.Codigo_Solicitante
+              text: =Topic.Token
+              text_1: =Global.Codigodochamado
+
+          output:
+            binding:
+              datacriacao: Topic.Data_Criacao
+              numerochamado: Topic.NumeroChamado
+              ultimadescricao: Topic.UltimaDescricao
+              ultimooperador: Topic.UltimoOperador
+              ultimostatus: Topic.UltimoStatus
+
+          flowId: fd2d7cbf-eae7-f011-8544-7c1e526a9a9f
+
+        - kind: Question
+          id: question_Ihr3LH
+          interruptionPolicy:
+            allowInterruption: true
+
+          alwaysPrompt: true
+          variable: init:Topic.Var1
+          prompt: |-
+            Segue a descrição deste chamado:
+            - 🆔 **Codigo do chamado:** {Topic.NumeroChamado}
+            - 📅 **Data de Criação:** {Topic.DataCriacao}
+            - 👨‍💻 **Operador responsavel:** {Topic.UltimoOperador}
+            - 🔄 **Status:** {Topic.UltimoStatus}
+            - 💬 **Ultima interação:**
+
+            {Topic.UltimaDescricao}
+
+
+            Voce deseja interagir neste chamado?
+          entity:
+            kind: EmbeddedEntity
+            definition:
+              kind: ClosedListEntity
+              items:
+                - id: Sim
+                  displayName: Sim
+
+                - id: Não, voltar ao menu inicial
+                  displayName: Não, voltar ao menu inicial
+
+                - id: Encerrar atendimento
+                  displayName: Encerrar atendimento
+
+        - kind: ConditionGroup
+          id: conditionGroup_s2hHDE
+          conditions:
+            - id: conditionItem_hSRv94
+              condition: =Topic.Var1 = 'crdb8_deskManagerItSupportAgent.topic.Consultarumchamado.main.question_Ihr3LH'.Sim
+              actions:
+                - kind: BeginDialog
+                  id: zHubH8
+                  dialog: crdb8_deskManagerItSupportAgent.topic.Interagenochamado
+
+            - id: conditionItem_NuZydA
+              condition: =Topic.Var1 = 'crdb8_deskManagerItSupportAgent.topic.Consultarumchamado.main.question_Ihr3LH'.'Não, voltar ao menu inicial'
+              actions:
+                - kind: BeginDialog
+                  id: 5vCTbF
+                  dialog: crdb8_deskManagerItSupportAgent.topic.MenuPrincipal
+
+            - id: conditionItem_IgoIce
+              condition: =Topic.Var1 = 'crdb8_deskManagerItSupportAgent.topic.Consultarumchamado.main.question_Ihr3LH'.'Encerrar atendimento'
+              actions:
+                - kind: SendActivity
+                  id: sendActivity_0YRxpT
+                  activity: |-
+                    Ok!
+                    A Equipe de TI da emccamp agradece o seu contato e seguimos a disposição caso precise.
+                    Até breve!
+
+                - kind: CancelAllDialogs
+                  id: YXv3g1
+
+          elseActions:
+            - kind: SendActivity
+              id: sendActivity_oLhE97
+              activity: |-
+                Não entendi a sua solicitação.
+                Vou te mandar para o menu inicial para recomeçarmos o atendimento.
+
+            - kind: BeginDialog
+              id: AGQ25B
+              dialog: crdb8_deskManagerItSupportAgent.topic.MenuPrincipal
+
+inputType: {}
+outputType: {}

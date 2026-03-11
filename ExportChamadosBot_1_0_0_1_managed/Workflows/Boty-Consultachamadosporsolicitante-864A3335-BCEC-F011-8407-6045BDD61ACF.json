@@ -1,0 +1,449 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "description": "",
+                  "title": "Token",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_1": {
+                  "description": "",
+                  "title": "Pesquisa",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "number": {
+                  "description": "Please enter a number",
+                  "title": "CodSolicitante",
+                  "type": "number",
+                  "x-ms-content-hint": "NUMBER",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "text",
+                "number"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Consulta_Chamados": {
+          "type": "Http",
+          "inputs": {
+            "uri": "https://api.desk.ms/Chamados/lista",
+            "method": "POST",
+            "headers": {
+              "Authorization": "@{triggerBody()?['text']}"
+            },
+            "body": {
+              "Pesquisa": "@triggerBody()?['text_1']",
+              "CodSolicitante": "@triggerBody()?['number']",
+              "Ordem": [
+                {
+                  "Coluna": "Assunto",
+                  "Direcao": "true"
+                }
+              ]
+            }
+          },
+          "runAfter": {
+            "SETA_ASSUNTO": [
+              "SUCCEEDED"
+            ]
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "Parse_Json_chamados": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('Consulta_Chamados')",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "root": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Chave": {
+                        "type": "integer"
+                      },
+                      "CodChamado": {
+                        "type": "string"
+                      },
+                      "NomePrioridade": {
+                        "type": "string"
+                      },
+                      "DataCriacao": {
+                        "type": "string"
+                      },
+                      "HoraCriacao": {
+                        "type": "string"
+                      },
+                      "DataFinalizacao": {
+                        "type": "string"
+                      },
+                      "HoraFinalizacao": {
+                        "type": "string"
+                      },
+                      "DataAgendamento": {
+                        "type": "string"
+                      },
+                      "HoraAgendamento": {
+                        "type": "string"
+                      },
+                      "NomeStatus": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "text": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "text"
+                          ]
+                        }
+                      },
+                      "Assunto": {
+                        "type": "string"
+                      },
+                      "Descricao": {
+                        "type": "string"
+                      },
+                      "NomeUsuario": {
+                        "type": "string"
+                      },
+                      "SobrenomeUsuario": {
+                        "type": "string"
+                      },
+                      "NomeOperador": {
+                        "type": "string"
+                      },
+                      "SobrenomeOperador": {
+                        "type": "string"
+                      },
+                      "TotalAcoes": {
+                        "type": "integer"
+                      },
+                      "TotalAnexos": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "Chave",
+                      "CodChamado",
+                      "NomePrioridade",
+                      "DataCriacao",
+                      "HoraCriacao",
+                      "DataFinalizacao",
+                      "HoraFinalizacao",
+                      "NomeStatus",
+                      "Assunto",
+                      "Descricao",
+                      "NomeUsuario",
+                      "SobrenomeUsuario",
+                      "NomeOperador",
+                      "SobrenomeOperador",
+                      "TotalAcoes",
+                      "TotalAnexos"
+                    ]
+                  }
+                },
+                "total": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Consulta_Chamados": [
+              "Succeeded"
+            ]
+          }
+        },
+        "STATUS": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "STATUS",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "OPERADOR": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "OPERADOR",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "STATUS": [
+              "Succeeded"
+            ]
+          }
+        },
+        "DESCRICAO": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "DESCRICAO",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "OPERADOR": [
+              "Succeeded"
+            ]
+          }
+        },
+        "CHAMADO": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CHAMADO",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "DESCRICAO": [
+              "Succeeded"
+            ]
+          }
+        },
+        "DATA_CRIACAO": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "DATACRIACAO",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "CHAMADO": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Normalizar_Dados": {
+          "type": "Compose",
+          "inputs": "@if(\r\n    startsWith(trim(body('Consulta_Chamados')), '['),\r\n    json(body('Consulta_Chamados')),\r\n    if(\r\n        empty(json(body('Consulta_Chamados'))?['root']),\r\n        createArray(),\r\n        if(\r\n            equals(coalesce(json(body('Consulta_Chamados'))?['root']?[0], 'IsObject'), 'IsObject'),\r\n            createArray(json(body('Consulta_Chamados'))?['root']),\r\n            json(body('Consulta_Chamados'))?['root']\r\n        )\r\n    )\r\n)",
+          "runAfter": {
+            "Parse_Json_chamados": [
+              "Succeeded"
+            ]
+          }
+        },
+        "SETA_STATUS": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "STATUS",
+            "value": "@coalesce(first(outputs('Normalizar_Dados'))?['NomeStatus']?[0]?['text'], 'Sem Status')"
+          },
+          "runAfter": {
+            "Normalizar_Dados": [
+              "Succeeded"
+            ]
+          }
+        },
+        "SETA_OPERADOR": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "OPERADOR",
+            "value": " @{concat(first(outputs('Normalizar_Dados'))?['NomeOperador'], ' ', first(outputs('Normalizar_Dados'))?['SobrenomeOperador'])}"
+          },
+          "runAfter": {
+            "SETA_STATUS": [
+              "SUCCEEDED"
+            ]
+          }
+        },
+        "SETA_DESCRICAO": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "DESCRICAO",
+            "value": "@first(outputs('Normalizar_Dados'))?['Descricao']"
+          },
+          "runAfter": {
+            "SETA_OPERADOR": [
+              "SUCCEEDED"
+            ]
+          }
+        },
+        "SETA_CHAMADO": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "CHAMADO",
+            "value": "@first(outputs('Normalizar_Dados'))?['CodChamado']"
+          },
+          "runAfter": {
+            "SETA_DESCRICAO": [
+              "SUCCEEDED"
+            ]
+          }
+        },
+        "SETA_DATA": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "DATACRIACAO",
+            "value": "@first(outputs('Normalizar_Dados'))?['DataCriacao']"
+          },
+          "runAfter": {
+            "SETA_CHAMADO": [
+              "SUCCEEDED"
+            ]
+          }
+        },
+        "Respond_to_the_agent": {
+          "type": "Response",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ultimostatus": {
+                  "title": "UltimoStatus",
+                  "description": "",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "ultimooperador": {
+                  "title": "UltimoOperador",
+                  "description": "",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "ultimadescricao": {
+                  "title": "UltimaDescricao",
+                  "description": "",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "numerochamado": {
+                  "title": "NumeroChamado",
+                  "description": "",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "datacriacao": {
+                  "title": "DataCriacao",
+                  "description": "",
+                  "type": "string",
+                  "format": "date",
+                  "x-ms-content-hint": "DATE",
+                  "x-ms-dynamically-added": true
+                },
+                "assuntochamado": {
+                  "title": "AssuntoChamado",
+                  "description": "",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "ultimostatus": "@{variables('STATUS')}",
+              "ultimooperador": "@{variables('OPERADOR')}",
+              "ultimadescricao": "@{variables('DESCRICAO')}",
+              "numerochamado": "@{variables('CHAMADO')}",
+              "datacriacao": "@{variables('DATACRIACAO')}",
+              "assuntochamado": "@{variables('ASSUNTO')}"
+            }
+          },
+          "runAfter": {
+            "SETA_ASSUNTO_CHAMADO": [
+              "SUCCEEDED"
+            ]
+          }
+        },
+        "SETA_ASSUNTO": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ASSUNTO",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "DATA_CRIACAO": [
+              "Succeeded"
+            ]
+          }
+        },
+        "SETA_ASSUNTO_CHAMADO": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "ASSUNTO",
+            "value": "@first(outputs('Normalizar_Dados'))?['Assunto']"
+          },
+          "runAfter": {
+            "SETA_DATA": [
+              "SUCCEEDED"
+            ]
+          }
+        }
+      },
+      "outputs": {},
+      "description": "This flow starts when it receives a manual trigger with user input. It stores search criteria, then sends a POST request to an external API to retrieve ticket data. The response is parsed, and for each ticket, details like ticket number, creation date, status, and responsible operator are formatted into a summary string. After processing all tickets, the flow returns the compiled summary as a response to the requester. The flow ensures each step only runs after the previous one succeeds, maintaining a logical sequence for data handling and output."
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}
