@@ -1,121 +1,92 @@
 <!DOCTYPE html>
+<html class="dark" lang="pt-BR">
 
-<html class="dark" lang="pt-BR"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Gestão de Tipos - Helpdesk</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#10b981",
+                        "primary": "#0ea5e9",
                         "background-light": "#f6f8f7",
-                        "background-dark": "#0f172a",
-                        "slate-card": "#1e293b",
-                        "slate-input": "#334155",
+                        "background-dark": "#0c111d",
+                        "card-dark": "#111827",
                     },
                     fontFamily: {
                         "display": ["Inter", "sans-serif"]
-                    },
-                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                    }
                 },
             },
         }
     </script>
-<style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .material-symbols-outlined.fill {
-            font-variation-settings: 'FILL' 1;
-        }
+    <style>
+        body { font-family: 'Inter', sans-serif; }
     </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  </head>
+</head>
+
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
-<!-- Header -->
-<header class="sticky top-0 z-10 bg-background-light dark:bg-background-dark border-b border-slate-200 dark:border-slate-800">
-<div class="flex items-center p-4 justify-between">
-<div class="max-w-5xl mx-auto flex items-center justify-between w-full">
-<div class="flex items-center gap-3">
-<a href="/config" class="flex items-center text-slate-900 dark:text-slate-100 hover:text-primary transition-colors">
-<span class="material-symbols-outlined cursor-pointer">arrow_back</span>
-</a>
-<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight">Gestão de Tipos de Chamados</h2>
-</div>
-<button class="text-slate-900 dark:text-slate-100">
-<span class="material-symbols-outlined">search</span>
-</button>
-</div>
-</header>
-<!-- Main Content -->
-<main class="flex-1 w-full overflow-y-auto p-4 pb-24">
-<div class="max-w-5xl mx-auto w-full space-y-6">
-<!-- Action Button -->
-<div class="flex justify-end">
-<button class="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-background-dark px-4 py-2.5 rounded-lg font-bold text-sm transition-colors shadow-lg shadow-primary/10">
-<span class="material-symbols-outlined text-[20px]">add</span>
-<span>Novo Tipo</span>
-</button>
-</div>
-<!-- Ticket Types Table/List -->
-<div class="bg-white dark:bg-slate-card rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-<div class="overflow-x-auto">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-<th class="px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Ícone</th>
-<th class="px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tipo</th>
-<th class="px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Ações</th>
-</tr>
-</thead>
-<tbody id="typesTableBody" class="divide-y divide-slate-200 dark:divide-slate-800">
-    <!-- Rows will be populated by Javascript -->
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</main>
-<!-- Bottom Navigation Bar -->
-<nav class="shrink-0 relative w-full border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-card-dark px-4 pb-3 pt-2 safe-area-bottom">
-        <div class="flex max-w-2xl mx-auto gap-2">
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400"
-                href="/dashboard">
-                <span class="material-symbols-outlined">confirmation_number</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Tickets</p>
-            </a>
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400"
-                href="/users" id="navUsersBtn" style="display:flex;">
-                <span class="material-symbols-outlined">format_list_bulleted</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Usuários</p>
-            </a>
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400" href="/reports">
-                <span class="material-symbols-outlined">bar_chart</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Relatórios</p>
-            </a>
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400" href="/profile">
-                <span class="material-symbols-outlined">person</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Perfil</p>
-            </a>
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="/config" id="navConfigBtn" style="display:flex;">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">settings</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Ajustes</p>
-            </a>
+    <!-- Unified Top Header -->
+    <div id="top-header"></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 w-full overflow-y-auto p-4 pb-24 pt-0">
+        <div class="max-w-5xl mx-auto w-full space-y-6">
+            <div class="flex items-center justify-between">
+                <p class="text-slate-400 text-sm font-medium">Configure os tipos de chamados do sistema</p>
+                <button onclick="openNewTypeModal()" class="bg-primary hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">add</span>
+                    Novo Tipo
+                </button>
+            </div>
+
+            <div class="bg-card-dark rounded-xl border border-white/5 overflow-hidden shadow-xl">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-white/5">
+                            <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-white/5">Tipo</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-white/5 text-right px-6">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="typesTableBody">
+                        <!-- Types will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </nav>
+    </main>
+
+    <!-- Modal Novo Tipo -->
+    <div id="newTypeModal" class="fixed inset-0 z-[110] hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-card-dark border border-white/10 w-full max-w-md rounded-2xl shadow-2xl animate-up">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-4">Adicionar Novo Tipo</h3>
+                    <input type="text" id="typeName" placeholder="Nome do Tipo"
+                        class="w-full bg-black/40 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white placeholder:text-slate-600 mb-6">
+                    <div class="flex gap-3">
+                        <button onclick="closeNewTypeModal()" class="flex-1 px-4 py-3 rounded-xl border border-white/10 text-slate-400 font-bold hover:bg-white/5 transition-all">Cancelar</button>
+                        <button onclick="saveNewType()" class="flex-1 px-4 py-3 rounded-xl bg-primary text-black font-bold hover:brightness-110 transition-all">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unified Bottom Navigation -->
+    <div id="bottom-nav"></div>
+
+    <script src="/static/header.js?v=20"></script>
+    <script src="/static/nav.js?v=20"></script>
     <script src="/static/types.js"></script>
     <script src="/static/app.js"></script>
-</body></html>
+</body>
+</html>

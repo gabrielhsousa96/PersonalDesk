@@ -17,9 +17,9 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#10b77f",
+                        "primary": "#0ea5e9",
                         "background-light": "#f6f8f7",
-                        "background-dark": "#0f172a",
+                        "background-dark": "#0c111d",
                         "card-dark": "#1e293b",
                         "neutral-slate": "#334155",
                     },
@@ -51,13 +51,14 @@
 <body
     class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 h-[100dvh] overflow-hidden flex flex-col">
     <!-- Header -->
-    <header
-        class="shrink-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-4">
-        <div class="max-w-5xl mx-auto flex items-center justify-between">
-            <h1 class="text-xl font-bold tracking-tight">Gestão de Usuários</h1>
-            <!-- Only Admins can create new users ideally, but we will leave the button visually -->
-            <button id="btnNewUser" onclick="openNewUserModal()"
-                class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors">
+    <!-- Unified Top Header -->
+    <div id="top-header"></div>
+
+    <main class="flex-1 overflow-y-auto px-4 py-6 pb-24 pt-0">
+        <div class="max-w-5xl mx-auto flex flex-col gap-6">
+            <div class="flex items-center justify-between">
+                <button id="btnNewUser" onclick="openNewUserModal()"
+                    class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors">
                 <span class="material-symbols-outlined text-[20px]">add</span>
                 Novo Usuário
             </button>
@@ -153,35 +154,13 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
-    <nav
-        class="shrink-0 relative w-full bg-white/90 dark:bg-card-dark/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 safe-area-pb">
-        <div class="max-w-md mx-auto flex justify-around py-3">
-            <a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors"
-                href="/dashboard">
-                <span class="material-symbols-outlined">confirmation_number</span>
-                <span class="text-[10px] font-medium uppercase tracking-tight">Tickets</span>
-            </a>
-            <a class="flex flex-col items-center gap-1 text-primary transition-colors" href="/users">
-                <span class="material-symbols-outlined fill-1">group_work</span>
-                <span class="text-[10px] font-bold uppercase tracking-tight">Usuários</span>
-            </a>
-            <a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors" href="/reports">
-                <span class="material-symbols-outlined">bar_chart</span>
-                <span class="text-[10px] font-medium uppercase tracking-tight">Relatórios</span>
-            </a>
-            <a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors"
-                href="/profile">
-                <span class="material-symbols-outlined">person</span>
-                <span class="text-[10px] font-medium uppercase tracking-tight">Perfil</span>
-            </a>
-            <a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors"
-                href="/config" id="navConfigBtn" style="display:none;">
-                <span class="material-symbols-outlined">settings</span>
-                <span class="text-[10px] font-medium uppercase tracking-tight">Ajustes</span>
-            </a>
-        </div>
-    </nav>
+    <!-- Unified Bottom Navigation -->
+    <div id="bottom-nav"></div>
+
+    <script src="/static/header.js?v=20"></script>
+    <script src="/static/nav.js?v=20"></script>
+    <script src="/static/users.js?v=4"></script>
+    <script src="/static/app.js"></script>
     <script src="/static/users.js?v=4"></script>
     <script src="/static/app.js"></script>
 </body>

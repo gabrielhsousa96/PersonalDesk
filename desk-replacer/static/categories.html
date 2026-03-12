@@ -13,9 +13,9 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#10b981",
+                        "primary": "#0ea5e9",
                         "background-light": "#f6f8f7",
-                        "background-dark": "#0f172a",
+                        "background-dark": "#0c111d",
                         "card-dark": "#1e293b",
                         "input-dark": "#334155",
                         "text-primary": "#f8fafc",
@@ -48,31 +48,18 @@
   </head>
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-text-primary min-h-screen flex flex-col">
 <!-- Header Section -->
-<header class="flex items-center bg-background-light dark:bg-background-dark p-4 justify-between sticky top-0 z-10 border-b border-slate-200 dark:border-slate-800">
-<div class="max-w-5xl mx-auto flex items-center justify-between w-full">
-<div class="text-slate-900 dark:text-text-primary flex size-10 items-center justify-center cursor-pointer">
-<a href="/config" class="flex items-center text-slate-900 dark:text-slate-100 hover:text-primary transition-colors">
-<span class="material-symbols-outlined">arrow_back</span>
-</a>
-</div>
-<h2 class="text-slate-900 dark:text-text-primary text-lg font-bold leading-tight tracking-tight flex-1 px-4">Gestão de Categorias</h2>
-<div class="flex w-10 items-center justify-end">
-<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-transparent text-slate-900 dark:text-text-primary">
-<span class="material-symbols-outlined">search</span>
-</button>
-</div>
-</div>
-</header>
-<main class="flex-1 w-full overflow-y-auto pb-24">
-<div class="max-w-5xl mx-auto w-full">
-<!-- Action Button -->
-<div class="flex px-4 py-4 justify-between items-center">
-<p class="text-text-secondary text-sm font-medium">Configure as categorias do sistema</p>
-<button class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white gap-2 text-sm font-bold shadow-lg shadow-primary/20">
-<span class="material-symbols-outlined text-[20px]">add</span>
-<span class="truncate">Nova Categoria</span>
-</button>
-</div>
+<!-- Unified Top Header -->
+<div id="top-header"></div>
+
+<main class="flex-1 overflow-y-auto px-4 py-6 pb-24 pt-0">
+    <div class="max-w-5xl mx-auto flex flex-col gap-6">
+        <div class="flex items-center justify-between">
+            <p class="text-slate-400 text-sm font-medium">Configure as categorias do sistema</p>
+            <button onclick="openNewCategoryModal()" class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white gap-2 text-sm font-bold shadow-lg shadow-primary/20 hover:bg-emerald-600 transition-all">
+                <span class="material-symbols-outlined text-[20px]">add</span>
+                <span class="truncate">Nova Categoria</span>
+            </button>
+        </div>
 <!-- Categories Table/List -->
 <div class="px-4">
 <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-card-dark">
@@ -91,33 +78,11 @@
 </div>
 </div>
 </main>
-<!-- Bottom Navigation Bar -->
-<nav class="shrink-0 relative w-full border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-card-dark px-4 pb-3 pt-2 safe-area-bottom">
-        <div class="flex max-w-2xl mx-auto gap-2">
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400"
-                href="/dashboard">
-                <span class="material-symbols-outlined">confirmation_number</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Tickets</p>
-            </a>
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400"
-                href="/users" id="navUsersBtn" style="display:flex;">
-                <span class="material-symbols-outlined">format_list_bulleted</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Usuários</p>
-            </a>
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400" href="/reports">
-                <span class="material-symbols-outlined">bar_chart</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Relatórios</p>
-            </a>
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400" href="/profile">
-                <span class="material-symbols-outlined">person</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Perfil</p>
-            </a>
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="/config" id="navConfigBtn" style="display:flex;">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">settings</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Ajustes</p>
-            </a>
-        </div>
-    </nav>
+    <!-- Unified Bottom Navigation -->
+    <div id="bottom-nav"></div>
+
+    <script src="/static/header.js?v=20"></script>
+<script src="/static/nav.js?v=20"></script>
     <script src="/static/categories.js"></script>
     <script src="/static/app.js"></script>
 </body></html>

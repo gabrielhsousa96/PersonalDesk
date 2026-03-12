@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Sprint Management - Help Desk</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#d4af37",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#121212",
+                        "surface-dark": "#1e1e1e",
+                        "border-dark": "#2a2a2a",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        :root {
+            --primary: #d4af37;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        .glass-panel {
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden sprints-theme">
+
+<!-- Unified Top Header -->
+<div id="top-header"></div>
+
+<main class="flex-1 overflow-y-auto pb-24">
+    <!-- Progress Section -->
+    <section class="p-6">
+        <div class="flex justify-between items-end mb-3">
+            <div>
+                <h2 class="text-sm font-medium text-slate-400 uppercase tracking-wider">Status Geral</h2>
+                <p id="totalSprintsCount" class="text-2xl font-bold mt-1">Carregando...</p>
+            </div>
+            <p class="text-primary text-sm font-semibold flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">rocket_launch</span>
+                Planejamento Ativo
+            </p>
+        </div>
+        <div class="w-full bg-border-dark h-2 rounded-full overflow-hidden">
+            <div id="generalProgressBar" class="bg-primary h-full rounded-full transition-all duration-700" style="width: 0%;"></div>
+        </div>
+    </section>
+
+    <!-- Sprints Container -->
+    <section class="px-6 mt-4">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold">Ciclos de Desenvolvimento</h3>
+        </div>
+        <div id="sprintsContainer" class="space-y-4">
+            <!-- Sprints will be rendered here -->
+            <div class="py-12 text-center text-slate-500 bg-surface-dark border border-border-dark rounded-xl">
+                <span class="material-symbols-outlined text-4xl mb-2 animate-pulse text-primary">hourglass_empty</span>
+                <p>Carregando ciclos...</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Floating Action Button -->
+<button id="btnNewSprint" class="fixed bottom-24 right-6 size-14 bg-primary text-black rounded-full shadow-lg shadow-primary/40 flex items-center justify-center transition-transform hover:scale-110 active:scale-95 z-40">
+    <span class="material-symbols-outlined font-bold text-3xl">add</span>
+</button>
+
+<!-- Modal Novo Sprint -->
+<div id="modalNewSprint" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-dark w-full max-w-md rounded-2xl border border-border-dark shadow-2xl overflow-hidden">
+        <div class="px-6 py-4 border-b border-border-dark flex justify-between items-center bg-white/5">
+            <h2 class="text-lg font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">event_note</span>
+                Nova Sprint
+            </h2>
+            <button onclick="closeSprintModal()" class="text-slate-400 hover:text-white transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form id="formNewSprint" class="p-6 space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Nome da Sprint</label>
+                <input type="text" id="sprintName" required placeholder="Ex: Sprint #25 - Backend Refactor"
+                    class="w-full bg-black/40 border-border-dark rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white placeholder:text-slate-600">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Início</label>
+                    <input type="date" id="sprintStart" required
+                        class="w-full bg-black/40 border-border-dark rounded-xl px-3 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Fim</label>
+                    <input type="date" id="sprintEnd" required
+                        class="w-full bg-black/40 border-border-dark rounded-xl px-3 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Objetivo</label>
+                <textarea id="sprintGoal" rows="3" placeholder="Descreva os entregáveis deste ciclo..."
+                    class="w-full bg-black/40 border-border-dark rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white placeholder:text-slate-600 resize-none"></textarea>
+            </div>
+            <button type="submit"
+                class="w-full bg-primary hover:brightness-110 text-black font-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-[0.98] mt-2">
+                Começar Sprint
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Detalhes da Sprint (Nova Funcionalidade) -->
+<div id="modalSprintDetails" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-dark w-full max-w-2xl rounded-2xl border border-border-dark shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-border-dark flex justify-between items-center bg-white/5 shrink-0">
+            <div class="flex items-center gap-3">
+                <div id="sdIcon" class="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined fill">verified</span>
+                </div>
+                <div>
+                    <h2 id="sdTitle" class="text-lg font-bold leading-tight">Detalhes da Sprint</h2>
+                    <p id="sdStatusLabel" class="text-[10px] font-bold uppercase tracking-widest text-primary">Ativa</p>
+                </div>
+            </div>
+            <button onclick="closeDetailsModal()" class="text-slate-400 hover:text-white transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <!-- Body -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+            <!-- Form Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Nome da Sprint</label>
+                    <input type="text" id="sdName" class="w-full bg-black/20 border-border-dark rounded-xl px-4 py-3 text-sm focus:border-primary outline-none transition-all text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Status</label>
+                    <select id="sdStatus" class="w-full bg-black/20 border-border-dark rounded-xl px-4 py-3 text-sm focus:border-primary outline-none transition-all text-white">
+                        <option value="Planned">Planejada</option>
+                        <option value="Active">Ativa</option>
+                        <option value="Closed">Concluída</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Data Início</label>
+                    <input type="date" id="sdStart" class="w-full bg-black/20 border-border-dark rounded-xl px-4 py-3 text-sm focus:border-primary outline-none transition-all text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Data Fim</label>
+                    <input type="date" id="sdEnd" class="w-full bg-black/20 border-border-dark rounded-xl px-4 py-3 text-sm focus:border-primary outline-none transition-all text-white">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Objetivo do Ciclo</label>
+                <textarea id="sdGoal" rows="2" class="w-full bg-black/20 border-border-dark rounded-xl px-4 py-3 text-sm focus:border-primary outline-none transition-all text-white resize-none"></textarea>
+            </div>
+
+            <!-- Tickets in this Sprint -->
+            <div class="pt-4 border-t border-border-dark">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-bold flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-sm">list_alt</span>
+                        Chamados Vinculados
+                    </h3>
+                    <span id="sdTicketCount" class="text-[10px] font-bold bg-white/5 px-2 py-1 rounded text-slate-400 tracking-tighter">0 CHAMADOS</span>
+                </div>
+                <div id="sdTicketsContainer" class="space-y-2">
+                    <!-- Tickets will be rendered here -->
+                    <div class="py-6 text-center text-slate-500 border border-dashed border-border-dark rounded-xl">
+                        <p class="text-xs">Nenhum chamado vinculado a esta sprint.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="px-6 py-4 border-t border-border-dark bg-white/5 flex flex-col sm:flex-row gap-3">
+            <button onclick="gotoSelectedSprintBoard()" class="flex-1 flex items-center justify-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary font-bold py-3 rounded-xl transition-all border border-primary/20">
+                <span class="material-symbols-outlined text-sm">grid_view</span>
+                Ver no Painel
+            </button>
+            <button onclick="saveSprintChanges()" class="flex-1 bg-primary text-black font-bold py-3 rounded-xl shadow-lg shadow-primary/20 hover:brightness-110 transition-all">
+                Salvar Alterações
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Unified Bottom Navigation -->
+<div id="bottom-nav"></div>
+
+<script src="/static/header.js?v=20"></script>
+<script src="/static/nav.js?v=20"></script>
+<script src="/static/sprints.js?v=2"></script>
+</body>
+</html>
+

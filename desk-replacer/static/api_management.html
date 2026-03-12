@@ -13,9 +13,9 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#10b77f",
+                        "primary": "#0ea5e9",
                         "background-light": "#f6f8f7",
-                        "background-dark": "#10221c",
+                        "background-dark": "#0c111d",
                     },
                     fontFamily: {
                         "display": ["Inter"]
@@ -34,20 +34,8 @@
   </style>
   </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
-<!-- Header -->
-<header class="sticky top-0 z-10 bg-background-light dark:bg-background-dark border-b border-primary/10 px-4 py-4">
-<div class="flex items-center justify-between max-w-2xl mx-auto w-full">
-<div class="flex items-center gap-3">
-<a href="/config" class="p-2 hover:bg-primary/10 rounded-full transition-colors flex items-center justify-center">
-<span class="material-symbols-outlined text-slate-900 dark:text-slate-100">arrow_back</span>
-</a>
-<h1 class="text-xl font-bold tracking-tight">Gestão de API</h1>
-</div>
-<button class="bg-primary hover:bg-primary/90 text-background-dark px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-lg shadow-primary/20">
-                Novo Token
-            </button>
-</div>
-</header>
+<!-- Unified Top Header -->
+<div id="top-header"></div>
 <!-- Main Content -->
 <main class="flex-1 max-w-2xl mx-auto w-full p-4 space-y-6">
 <!-- Section Info -->
@@ -133,55 +121,10 @@
 </a>
 </div>
 </main>
-<!-- Bottom Navigation -->
-<nav class="shrink-0 bg-[#0a1511] border-t border-slate-200 dark:border-slate-800 px-6 py-3">
-<div class="max-w-[1400px] mx-auto flex justify-around items-center">
-<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="/dashboard">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="text-[10px] font-medium">Dashboard</span>
-</a>
-<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="/users">
-<span class="material-symbols-outlined">group</span>
-<span class="text-[10px] font-medium">Usuários</span>
-</a>
-<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="/profile">
-<span class="material-symbols-outlined">person</span>
-<span class="text-[10px] font-medium">Perfil</span>
-</a>
-<a class="flex flex-col items-center gap-1 text-primary hidden" id="config-nav-btn" href="/config">
-<span class="material-symbols-outlined font-variation-fill">settings</span>
-<span class="text-[10px] font-bold">Ajustes</span>
-</a>
-</div>
-</nav>
-<style>
-        .font-variation-fill {
-            font-variation-settings: 'FILL' 1;
-        }
-    </style>
-<script>
-    document.addEventListener('DOMContentLoaded', async () => {
-        const token = localStorage.getItem('access_token');
-        if (token) {
-            try {
-                const parts = token.split('.');
-                if (parts.length === 3) {
-                    const payload = JSON.parse(atob(parts[1]));
-                    if (payload.sub) {
-                        const res = await fetch('/api/auth/me', { headers: { 'Authorization': `Bearer ${token}` } });
-                        if (res.ok) {
-                            const user = await res.json();
-                            if (user.profile.name === 'Administrator') {
-                                document.getElementById('config-nav-btn').classList.remove('hidden');
-                            }
-                        }
-                    }
-                }
-            } catch (e) {
-                console.error("Erro ao configurar menu bottom:", e);
-            }
-        }
-    });
-</script>
+    <!-- Unified Bottom Navigation -->
+    <div id="bottom-nav"></div>
+
+    <script src="/static/header.js?v=20"></script>
+    <script src="/static/nav.js?v=20"></script>
 <script src="/static/app.js"></script>
 </body></html>

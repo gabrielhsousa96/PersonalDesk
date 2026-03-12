@@ -75,23 +75,28 @@
 </head>
 
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 flex flex-col h-[100dvh] overflow-hidden">
-    <main class="flex-1 overflow-hidden w-full max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8 flex flex-col">
-        <header
-            class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-slate-200 dark:border-slate-800 gap-4">
-            <div class="flex items-center gap-4">
-                <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Gestão de Chamados</h1>
+    <!-- Unified Top Header -->
+    <div id="top-header"></div>
+
+    <main class="flex-1 overflow-hidden w-full max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8 flex flex-col pt-0">
+        <!-- Board Context Bar -->
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+            <div id="activeSprintIndicator" class="hidden text-xs font-semibold text-primary/80 flex items-center gap-1 bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20">
+                <span class="material-symbols-outlined text-xs">event_note</span>
+                <span id="activeSprintName">Carregando sprint...</span>
             </div>
-            <div class="flex flex-wrap gap-3">
-                <button id="btnNewTicket"
-                    class="bg-primary hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors text-sm flex items-center gap-1">
-                    <span class="material-symbols-outlined text-[20px]">add</span> Novo Chamado
-                </button>
+            
+            <div id="sprintFilterContainer" class="flex items-center gap-2 bg-slate-900 p-1.5 rounded-xl border border-white/5 shadow-inner">
+                <span class="material-symbols-outlined text-slate-500 text-sm ml-2">filter_list</span>
+                <select id="sprintSelect" class="bg-transparent border-none focus:ring-0 text-xs font-bold text-slate-300 pr-8 py-1 rounded cursor-pointer min-w-[180px]">
+                    <option value="0">📊 Backlog</option>
+                </select>
             </div>
-        </header>
+        </div>
 
         <div class="flex gap-4 overflow-x-auto pb-2 board-scroll flex-1 items-start">
             <!-- Aguardando atendimento -->
-            <div class="column bg-white dark:bg-card-dark rounded-xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm"
+            <div class="column glass rounded-2xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm"
                 id="col-Aguardando atendimento">
                 <h2
                     class="font-semibold text-slate-700 dark:text-slate-300 mb-4 flex justify-between items-center text-sm uppercase tracking-wider shrink-0">
@@ -103,7 +108,7 @@
             </div>
 
             <!-- Em atendimento -->
-            <div class="column bg-white dark:bg-card-dark rounded-xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm"
+            <div class="column glass rounded-2xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm"
                 id="col-Em atendimento">
                 <h2
                     class="font-semibold text-slate-700 dark:text-slate-300 mb-4 flex justify-between items-center text-sm uppercase tracking-wider shrink-0">
@@ -115,7 +120,7 @@
             </div>
 
             <!-- Aguardando terceiros -->
-            <div class="column bg-white dark:bg-card-dark rounded-xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm"
+            <div class="column glass rounded-2xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm"
                 id="col-Aguardando terceiros">
                 <h2
                     class="font-semibold text-slate-700 dark:text-slate-300 mb-4 flex justify-between items-center text-sm uppercase tracking-wider shrink-0">
@@ -127,7 +132,7 @@
             </div>
 
             <!-- Aguardando testes -->
-            <div class="column bg-white dark:bg-card-dark rounded-xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm"
+            <div class="column glass rounded-2xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm"
                 id="col-Aguardando testes">
                 <h2
                     class="font-semibold text-slate-700 dark:text-slate-300 mb-4 flex justify-between items-center text-sm uppercase tracking-wider shrink-0">
@@ -139,7 +144,7 @@
             </div>
 
             <!-- Concluido -->
-            <div class="column bg-white dark:bg-card-dark rounded-xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm opacity-60 hover:opacity-100 transition-opacity"
+            <div class="column glass rounded-2xl p-4 min-w-[320px] w-[320px] flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm opacity-60 hover:opacity-100 transition-opacity"
                 id="col-Concluido">
                 <h2
                     class="font-semibold text-slate-700 dark:text-slate-300 mb-4 flex justify-between items-center text-sm uppercase tracking-wider shrink-0">
@@ -190,6 +195,29 @@
                             </select>
                         </div>
                     </div>
+
+                    <!-- DevOps Fields Row -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label for="newPriority" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Prioridade</label>
+                            <select id="newPriority" class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                                <option value="Critical">Critical</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="newSprint" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Sprint</label>
+                            <select id="newSprint" class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                                <option value="0">Backlog</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="newEstimated" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Est. (h)</label>
+                            <input type="number" id="newEstimated" step="0.5" value="0" class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        </div>
+                    </div>
                     <div>
                         <label for="description"
                             class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Descrição do
@@ -224,6 +252,43 @@
 
             <!-- Descrição Original & Timeline (Rolável) -->
             <div class="p-6 overflow-y-auto flex-1 bg-slate-50 dark:bg-slate-900/50" id="tdmBody">
+                <div id="tdmMeta" class="flex flex-wrap gap-2 mb-6"></div>
+                
+                <!-- DevOps Fields Section (Editable) -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase font-bold text-slate-500 mb-1">Prioridade</span>
+                        <select id="editPriority" class="bg-transparent border-none p-0 text-xs font-bold focus:ring-0 cursor-pointer">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Critical">Critical</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase font-bold text-slate-500 mb-1">Estimativa (h)</span>
+                        <input type="number" id="editEstimated" step="0.5" class="bg-transparent border-none p-0 text-xs font-bold focus:ring-0 w-16">
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase font-bold text-slate-500 mb-1">Gasto</span>
+                        <span id="tdmSpent" class="text-xs font-bold text-primary py-0.5">0h</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase font-bold text-slate-500 mb-1">Sprint</span>
+                        <select id="editSprint" class="bg-transparent border-none p-0 text-xs font-bold focus:ring-0 cursor-pointer max-w-[100px]">
+                            <option value="0">Backlog</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Save DevOps Changes Button (Hidden by default, shown on change) -->
+                <div id="devopsActions" class="hidden mb-6 flex justify-end">
+                    <button id="btnSaveDevops" class="bg-amber-500 hover:bg-amber-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition-all shadow-sm">
+                        Salvar Alterações
+                    </button>
+                </div>
+
+                <!-- Time Logging Tool -->
                 <div class="mb-6 pb-6 border-b border-slate-200 dark:border-slate-800">
                     <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
                         <span class="material-symbols-outlined text-[16px]">notes</span> Descrição Original</h3>
@@ -255,42 +320,11 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
-    <nav
-        class="shrink-0 relative w-full bg-white/90 dark:bg-card-dark/90 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 pb-safe pt-2 px-4 shadow-[0_-4px_25px_-5px_rgba(0,0,0,0.1)] dark:shadow-none z-40">
-        <div class="max-w-md mx-auto flex justify-between items-end pb-2">
-            <a class="flex flex-1 flex-col items-center gap-1 text-primary transition-colors" href="/dashboard">
-                <span class="material-symbols-outlined fill-1">confirmation_number</span>
-                <span class="text-[10px] font-bold uppercase tracking-tight">Tickets</span>
-            </a>
-            <a class="flex flex-1 flex-col items-center gap-1 text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
-                href="/users" id="navUsersBtn" style="display:none;">
-                <span class="material-symbols-outlined">group_work</span>
-                <span class="text-[10px] font-medium uppercase tracking-tight">Usuários</span>
-            </a>
-            <a class="flex flex-1 flex-col items-center gap-1 text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
-                href="/reports">
-                <span class="material-symbols-outlined">bar_chart</span>
-                <span class="text-[10px] font-medium uppercase tracking-tight">Relatórios</span>
-            </a>
-            <a class="flex flex-1 flex-col items-center gap-1 text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
-                href="/profile">
-                <span class="material-symbols-outlined">person</span>
-                <span class="text-[10px] font-medium uppercase tracking-tight">Perfil</span>
-            </a>
-            <a class="flex flex-1 flex-col items-center gap-1 text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
-                href="/config" id="navConfigBtn" style="display:none;">
-                <span class="material-symbols-outlined">settings</span>
-                <span class="text-[10px] font-medium uppercase tracking-tight">Ajustes</span>
-            </a>
-        </div>
-    </nav>
+    <!-- Unified Bottom Navigation -->
+    <div id="bottom-nav"></div>
 
-    <!-- Tailwind CDN Safelist for app.js dynamic injected classes -->
-    <div
-        class="hidden border-l-4 hover:shadow-md focus:outline-none border-amber-500 border-purple-500 border-blue-500 border-emerald-500 border-slate-400 dark:border-slate-600 dark:border-slate-700 border-slate-200 text-[11px] truncate uppercase tracking-wider px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 leading-tight line-clamp-2 mb-3 leading-relaxed mt-auto pt-3 border-t border-slate-100 text-xs">
-    </div>
-
+    <script src="/static/header.js?v=20"></script>
+    <script src="/static/nav.js?v=20"></script>
     <script src="/static/app.js?v=4"></script>
 </body>
 

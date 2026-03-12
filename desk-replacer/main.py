@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
-from sqlalchemy import create_engine, Column, Integer, String, Enum, ForeignKey, Boolean, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, Enum, ForeignKey, Boolean, DateTime, Float
 from sqlalchemy.sql import func
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship, Session
 import bcrypt
@@ -78,6 +78,18 @@ class TicketTypeDB(Base):
     category_id = Column(Integer, ForeignKey("ticket_categories.id"))
     category = relationship("TicketCategoryDB")
 
+class SprintDB(Base):
+    __tablename__ = "sprints"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    start_date = Column(DateTime)
+    end_date = Column(DateTime)
+    status = Column(String, default="Active") # Active, Closed, Planned
+    goal = Column(String, nullable=True)
+    created_at = Column(DateTime, server_default=func.now())
+
+    tickets = relationship("TicketDB", back_populates="sprint")
+
 class TicketDB(Base):
     __tablename__ = "tickets"
     id = Column(Integer, primary_key=True, index=True)
@@ -87,6 +99,14 @@ class TicketDB(Base):
     status = relationship("StatusDB")
     type_id = Column(Integer, ForeignKey("ticket_types.id"), nullable=True)
     type = relationship("TicketTypeDB")
+    
+    # DevOps Fields
+    sprint_id = Column(Integer, ForeignKey("sprints.id"), nullable=True)
+    sprint = relationship("SprintDB", back_populates="tickets")
+    estimated_hours = Column(Float, default=0.0)
+    spent_hours = Column(Float, default=0.0)
+    priority = Column(String, default="Medium") # Low, Medium, High, Critical
+    
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=True) # nullable for backwards compat
     creator = relationship("UserDB")
     interactions = relationship("TicketInteractionDB", back_populates="ticket", cascade="all, delete-orphan")
@@ -128,9 +148,43 @@ class TicketCreate(BaseModel):
     title: str
     description: str
     type_id: int | None = None
+    sprint_id: int | None = None
+    estimated_hours: float = 0.0
+    priority: str = "Medium"
 
 class TicketUpdate(BaseModel):
     status_id: int
+    sprint_id: int | None = None
+    estimated_hours: float | None = None
+    priority: str | None = None
+
+class SprintCreate(BaseModel):
+    name: str
+    start_date: datetime
+    end_date: datetime
+    goal: str | None = None
+
+class SprintUpdate(BaseModel):
+    name: str | None = None
+    start_date: datetime | None = None
+    end_date: datetime | None = None
+    status: str | None = None
+    goal: str | None = None
+
+class SprintResponse(BaseModel):
+    id: int
+    name: str
+    start_date: datetime
+    end_date: datetime
+    status: str
+    goal: str | None = None
+    created_at: datetime
+    class Config:
+        orm_mode = True
+
+class TimeLogCreate(BaseModel):
+    hours: float
+    description: str | None = None
 
 class ProfileResponse(BaseModel):
     id: int
@@ -190,7 +244,7 @@ class StatusResponse(BaseModel):
 class TicketCategoryCreate(BaseModel):
     name: str
 
-class TicketCategoryResponse(BaseModel):
+class TicketCategoryResponse(BaseModel): # Root for circularity
     id: int
     name: str
     class Config:
@@ -203,9 +257,13 @@ class TicketTypeCreate(BaseModel):
 class TicketTypeResponse(BaseModel):
     id: int
     name: str
-    category: TicketCategoryResponse
+    category_id: int
+    category: TicketCategoryResponse | None = None
     class Config:
         orm_mode = True
+
+class TicketCategoryFullResponse(TicketCategoryResponse):
+    types: list[TicketTypeResponse] = []
 
 class InteractionCreate(BaseModel):
     content: str
@@ -227,6 +285,14 @@ class TicketResponse(BaseModel):
     type: TicketTypeResponse | None = None
     creator: UserResponse | None = None
     interactions: list[InteractionResponse] = []
+    
+    # DevOps Fields
+    sprint_id: int | None = None
+    sprint: SprintResponse | None = None
+    estimated_hours: float = 0.0
+    spent_hours: float = 0.0
+    priority: str = "Medium"
+    created_at: datetime
 
     class Config:
         orm_mode = True
@@ -422,6 +488,14 @@ def serve_types():
 @app.get("/categories", include_in_schema=False)
 def serve_categories():
     return FileResponse(os.path.join(static_dir, "categories.html"))
+
+@app.get("/sprints")
+def serve_sprints():
+    return FileResponse(os.path.join(static_dir, "sprints.html"))
+
+@app.get("/reports")
+def serve_reports():
+    return FileResponse(os.path.join(static_dir, "reports.html"))
 
 @app.get("/api_management", include_in_schema=False)
 def serve_api_management():
@@ -626,7 +700,7 @@ def get_tickets(db = Depends(get_db), current_user: UserDB = Depends(get_current
         tickets = db.query(TicketDB).all()
     return tickets
 
-@app.get("/api/categories", response_model=list[TicketCategoryResponse], tags=["Tickets"])
+@app.get("/api/categories", response_model=list[TicketCategoryFullResponse], tags=["Tickets"])
 def get_categories(db: Session = Depends(get_db)):
     categories = db.query(TicketCategoryDB).all()
     types = db.query(TicketTypeDB).all()
@@ -636,7 +710,7 @@ def get_categories(db: Session = Depends(get_db)):
         cat_data = {
             "id": cat.id,
             "name": cat.name,
-            "types": [ {"id": t.id, "name": t.name} for t in types if t.category_id == cat.id ]
+            "types": [ {"id": t.id, "name": t.name, "category_id": t.category_id} for t in types if t.category_id == cat.id ]
         }
         cats_list.append(cat_data)
     return cats_list
@@ -652,30 +726,114 @@ def create_ticket(ticket: TicketCreate, db = Depends(get_db), current_user: User
         description=ticket.description, 
         status_id=default_status.id, 
         type_id=ticket.type_id,
-        creator_id=current_user.id
+        creator_id=current_user.id,
+        sprint_id=ticket.sprint_id if ticket.sprint_id != 0 else None,
+        estimated_hours=ticket.estimated_hours,
+        priority=ticket.priority
     )
     db.add(db_ticket)
     db.commit()
     db.refresh(db_ticket)
     return db_ticket
 
-@app.patch("/api/tickets/{ticket_id}/status", response_model=TicketResponse, tags=["Tickets"])
-def update_ticket_status(ticket_id: int, ticket_update: TicketUpdate, db = Depends(get_db), current_user: UserDB = Depends(get_current_user)):
+@app.patch("/api/tickets/{ticket_id}", response_model=TicketResponse, tags=["Tickets"])
+def update_ticket(ticket_id: int, ticket_update: TicketUpdate, db: Session = Depends(get_db), current_user: UserDB = Depends(get_current_user)):
     if current_user.profile.name == "Solicitante":
-        raise HTTPException(status_code=403, detail="Solicitantes cannot update ticket status.")
+        raise HTTPException(status_code=403, detail="Solicitantes cannot update tickets.")
         
     db_ticket = db.query(TicketDB).filter(TicketDB.id == ticket_id).first()
     if not db_ticket:
         raise HTTPException(status_code=404, detail="Ticket not found")
     
-    status_exists = db.query(StatusDB).filter(StatusDB.id == ticket_update.status_id).first()
-    if not status_exists:
-         raise HTTPException(status_code=400, detail="Invalid status ID")
+    if ticket_update.status_id:
+        status_exists = db.query(StatusDB).filter(StatusDB.id == ticket_update.status_id).first()
+        if not status_exists:
+             raise HTTPException(status_code=400, detail="Invalid status ID")
+        db_ticket.status_id = ticket_update.status_id
+        
+    if ticket_update.sprint_id is not None:
+        if ticket_update.sprint_id != 0:
+            sprint_exists = db.query(SprintDB).filter(SprintDB.id == ticket_update.sprint_id).first()
+            if not sprint_exists:
+                raise HTTPException(status_code=400, detail="Invalid sprint ID")
+            db_ticket.sprint_id = ticket_update.sprint_id
+        else:
+            db_ticket.sprint_id = None # Backlog
+            
+    if ticket_update.estimated_hours is not None:
+        db_ticket.estimated_hours = ticket_update.estimated_hours
+        
+    if ticket_update.priority:
+        db_ticket.priority = ticket_update.priority
     
-    db_ticket.status_id = ticket_update.status_id
     db.commit()
     db.refresh(db_ticket)
     return db_ticket
+
+@app.post("/api/tickets/{ticket_id}/log-time", response_model=TicketResponse, tags=["Tickets"])
+def log_ticket_time(ticket_id: int, time_log: TimeLogCreate, db: Session = Depends(get_db), current_user: UserDB = Depends(get_current_user)):
+    db_ticket = db.query(TicketDB).filter(TicketDB.id == ticket_id).first()
+    if not db_ticket:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+        
+    db_ticket.spent_hours += time_log.hours
+    
+    # Also add a system interaction for the log
+    log_content = f"🕒 Registrou {time_log.hours}h de trabalho."
+    if time_log.description:
+        log_content += f"\nDescrição: {time_log.description}"
+        
+    db_interaction = TicketInteractionDB(
+        ticket_id=ticket_id,
+        author_id=current_user.id,
+        content=log_content
+    )
+    db.add(db_interaction)
+    
+    db.commit()
+    db.refresh(db_ticket)
+    return db_ticket
+
+# --- Sprint Endpoints ---
+
+@app.get("/api/sprints", response_model=list[SprintResponse], tags=["Sprints"])
+def get_sprints(db: Session = Depends(get_db), current_user: UserDB = Depends(get_current_user)):
+    return db.query(SprintDB).order_by(SprintDB.created_at.desc()).all()
+
+@app.post("/api/sprints", response_model=SprintResponse, tags=["Sprints"])
+def create_sprint(sprint: SprintCreate, db: Session = Depends(get_db), current_user: UserDB = Depends(get_current_user)):
+    if current_user.profile.name != "Administrator":
+        raise HTTPException(status_code=403, detail="Only admins can create Sprints.")
+        
+    db_sprint = SprintDB(
+        name=sprint.name,
+        start_date=sprint.start_date,
+        end_date=sprint.end_date,
+        goal=sprint.goal
+    )
+    db.add(db_sprint)
+    db.commit()
+    db.refresh(db_sprint)
+    return db_sprint
+
+@app.patch("/api/sprints/{sprint_id}", response_model=SprintResponse, tags=["Sprints"])
+def update_sprint(sprint_id: int, sprint_in: SprintUpdate, db: Session = Depends(get_db), current_user: UserDB = Depends(get_current_user)):
+    if current_user.profile.name != "Administrator":
+        raise HTTPException(status_code=403, detail="Only admins can update Sprints.")
+        
+    db_sprint = db.query(SprintDB).filter(SprintDB.id == sprint_id).first()
+    if not db_sprint:
+        raise HTTPException(status_code=404, detail="Sprint not found")
+        
+    if sprint_in.name is not None: db_sprint.name = sprint_in.name
+    if sprint_in.start_date is not None: db_sprint.start_date = sprint_in.start_date
+    if sprint_in.end_date is not None: db_sprint.end_date = sprint_in.end_date
+    if sprint_in.status is not None: db_sprint.status = sprint_in.status
+    if sprint_in.goal is not None: db_sprint.goal = sprint_in.goal
+    
+    db.commit()
+    db.refresh(db_sprint)
+    return db_sprint
 
 @app.get("/api/tickets/{ticket_id}", response_model=TicketResponse)
 def get_ticket(ticket_id: int, db = Depends(get_db), current_user: UserDB = Depends(get_current_user)):

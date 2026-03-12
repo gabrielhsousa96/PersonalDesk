@@ -13,10 +13,10 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#8b5cf6",
-                        "background-dark": "#0f1420", // Custom user requirement
-                        "card-dark": "#1e293b",
-                        "border-dark": "#334155"
+                        "primary": "#a78bfa",
+                        "background-dark": "#1e1b4b",
+                        "card-dark": "#2e1065",
+                        "border-dark": "rgba(255,255,255,0.05)"
                     },
                     fontFamily: {
                         "display": ["Inter", "sans-serif"]
@@ -27,7 +27,7 @@
     </script>
     <style>
         body {
-            background-color: #0f1420; /* Keep strictly to the user dark background */
+            background-color: #1e1b4b; /* Matte Purple */
         }
         .custom-scrollbar::-webkit-scrollbar {
             width: 4px;
@@ -40,19 +40,8 @@
 </head>
 <body class="bg-background-dark text-slate-100 min-h-screen flex flex-col font-display">
     
-    <!-- Header Section -->
-    <header class="flex items-center justify-between p-4 sticky top-0 bg-background-dark/80 backdrop-blur-md z-10 border-b border-border-dark">
-        <div class="flex items-center gap-3">
-            <a href="/reports" class="text-slate-300 hover:text-white material-symbols-outlined transition-colors">arrow_back</a>
-            <div class="text-primary material-symbols-outlined text-3xl">analytics</div>
-            <h1 class="text-xl font-bold tracking-tight">Produtividade</h1>
-        </div>
-        <div class="flex items-center gap-3">
-            <button class="p-2 rounded-lg bg-card-dark text-slate-300 hover:text-primary transition-colors relative">
-                <span class="material-symbols-outlined">notifications</span>
-            </button>
-        </div>
-    </header>
+    <!-- Unified Top Header -->
+    <div id="top-header"></div>
 
     <main class="flex-1 overflow-y-auto custom-scrollbar pb-24">
         <!-- Filters Area -->
@@ -139,8 +128,11 @@
                 <p class="text-[10px] font-medium leading-normal tracking-wide">Ajustes</p>
             </a>
         </div>
-    </nav>
+    <!-- Unified Bottom Navigation -->
+    <div id="bottom-nav"></div>
 
+    <script src="/static/header.js?v=20"></script>
+    <script src="/static/nav.js?v=20"></script>
     <script src="/static/app.js"></script>
     <script src="/static/reports.js"></script>
 </body>

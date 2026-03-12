@@ -13,9 +13,9 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#10b77f",
+                        "primary": "#0ea5e9",
                         "background-light": "#f6f8f7",
-                        "background-dark": "#0f172a",
+                        "background-dark": "#0c111d",
                         "slate-card": "#1e293b",
                     },
                     fontFamily: {
@@ -35,14 +35,8 @@
   </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
 <!-- Header -->
-<header class="sticky top-0 z-10 bg-background-light dark:bg-background-dark border-b border-slate-200 dark:border-slate-800">
-<div class="flex items-center p-4 justify-between max-w-md mx-auto w-full">
-<button class="text-slate-600 dark:text-slate-400 flex items-center justify-center p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-<span class="material-symbols-outlined">arrow_back</span>
-</button>
-<h1 class="text-lg font-bold flex-1 text-center pr-10">Configurações</h1>
-</div>
-</header>
+<!-- Unified Top Header -->
+<div id="top-header"></div>
 <!-- Main Content -->
 <main class="flex-1 max-w-md mx-auto w-full p-4 space-y-2">
 <!-- Section: Ticket Management -->
@@ -97,31 +91,10 @@
 </main>
 <!-- Bottom Navigation Bar -->
 <!-- Bottom Navigation -->
-    <nav class="shrink-0 relative w-full border-t border-slate-200 dark:border-slate-800 bg-[#0a1511] px-4 pb-3 pt-2 safe-area-bottom">
-        <div class="flex max-w-2xl mx-auto gap-2">
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400"
-                href="/dashboard">
-                <span class="material-symbols-outlined">confirmation_number</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Tickets</p>
-            </a>
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400"
-                href="/users" id="navUsersBtn" style="display:flex;">
-                <span class="material-symbols-outlined">format_list_bulleted</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Usuários</p>
-            </a>
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400" href="/reports">
-                <span class="material-symbols-outlined">bar_chart</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Relatórios</p>
-            </a>
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400" href="/profile">
-                <span class="material-symbols-outlined">person</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Perfil</p>
-            </a>
-            <a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="/config" id="navConfigBtn" style="display:flex;">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">settings</span>
-                <p class="text-[10px] font-medium leading-normal tracking-wide">Ajustes</p>
-            </a>
-        </div>
-    </nav>
+    <!-- Unified Bottom Navigation -->
+    <div id="bottom-nav"></div>
+
+    <script src="/static/header.js?v=20"></script>
+    <script src="/static/nav.js?v=20"></script>
     <script src="/static/app.js"></script>
 </body></html>

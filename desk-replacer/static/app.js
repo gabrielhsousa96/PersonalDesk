@@ -45,6 +45,8 @@ const API_URL = '/api/tickets';
 let currentUserProfile = null;
 let currentUsername = null;
 let ticketCategories = [];
+let allSprints = [];
+let activeSprintId = parseInt(localStorage.getItem('active_sprint_id')) || 0;
 
 const columns = {
     "Aguardando atendimento": document.querySelector('[data-status="Aguardando atendimento"]'),
@@ -100,17 +102,7 @@ async function fetchTickets() {
                     btnNewTicket.style.display = 'none';
                 }
 
-                // Show Users link in footer for Admins and Operadores
-                const navUsersBtn = document.getElementById('navUsersBtn');
-                if (navUsersBtn && (currentUserProfile === 'Administrator' || currentUserProfile === 'Operador')) {
-                    navUsersBtn.style.display = 'flex';
-                }
-
-                // Show Config link in footer for Admins
-                const navConfigBtn = document.getElementById('navConfigBtn');
-                if (navConfigBtn && currentUserProfile === 'Administrator') {
-                    navConfigBtn.style.display = 'flex';
-                }
+                // Unified navigation permissions are now handled by nav.js
             }
         }
 
@@ -127,7 +119,14 @@ async function fetchTickets() {
         }
 
         const tickets = await response.json();
-        renderTickets(tickets);
+        
+        // Filter by Sprint if selected
+        const filteredTickets = activeSprintId === 0 
+            ? tickets.filter(t => !t.sprint_id) // Backlog
+            : tickets.filter(t => t.sprint_id === activeSprintId);
+
+        renderTickets(filteredTickets);
+        updateSprintIndicator();
 
         if (!dndInitialized && Object.values(columns).some(c => c !== null)) {
             initDragAndDrop();
@@ -235,15 +234,31 @@ function renderTickets(tickets) {
 
             let creatorHTML = ticket.creator ? `<span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">por: ${ticket.creator.username}</span>` : `<span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">#${ticket.id}</span>`;
 
-            let actionHTML = '';
-
-            // Both Solicitante and Operador now just see the static text since Operador drags to change status
-            actionHTML = `<span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded truncate">${_statusName}</span>`;
-
             let typeHTML = '';
             if (ticket.type) {
                 typeHTML = `<div class="mb-2 self-start px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded bg-primary/10 text-primary border border-primary/20 truncate max-w-full">${ticket.type.category.name} &bull; ${ticket.type.name}</div>`;
             }
+
+            // DevOps Badge Logic
+            let devopsHTML = '';
+            if (ticket.priority && ticket.priority !== 'Medium') {
+                const priorityColors = { 'High': 'text-orange-500', 'Critical': 'text-red-500', 'Low': 'text-blue-500' };
+                devopsHTML += `<span class="material-symbols-outlined text-[14px] ${priorityColors[ticket.priority] || ''}">priority_high</span>`;
+            }
+            if (ticket.estimated_hours > 0) {
+                devopsHTML += `<span class="flex items-center gap-0.5 text-[10px] text-slate-400 font-bold ml-auto"><span class="material-symbols-outlined text-[12px]">timer</span> ${ticket.spent_hours}/${ticket.estimated_hours}h</span>`;
+            }
+
+            ticketEl.innerHTML = `
+                ${typeHTML}
+                <div class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2 line-clamp-2">${ticket.title}</div>
+                <div class="flex items-center justify-between mt-auto pt-3 border-t border-slate-100 dark:border-slate-700/50">
+                    <div class="flex items-center gap-2 w-full">
+                        ${creatorHTML}
+                        ${devopsHTML}
+                    </div>
+                </div>
+            `;
 
             if (currentUserProfile !== 'Solicitante') {
                 // Operador/Admin can change status by dragging
@@ -251,7 +266,6 @@ function renderTickets(tickets) {
                 ticketEl.classList.add('grab-cursor');
                 ticketEl.addEventListener('dragstart', (e) => {
                     e.dataTransfer.setData('text/plain', ticket.id);
-                    // Slight delay to allow visually picking it up before adding transparency
                     setTimeout(() => ticketEl.classList.add('dragging'), 0);
                 });
                 ticketEl.addEventListener('dragend', () => {
@@ -259,19 +273,8 @@ function renderTickets(tickets) {
                 });
             }
 
-            ticketEl.innerHTML = `
-                ${typeHTML}
-                <h3 class="font-bold text-slate-800 dark:text-slate-100 text-sm leading-tight">${ticket.title}</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 mt-1 mb-3 leading-relaxed">${ticket.description}</p>
-                <div class="mt-auto pt-3 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center gap-2">
-                    ${creatorHTML}
-                    ${actionHTML}
-                </div>
-            `;
-
             // Add click listener to open interactions modal
             ticketEl.addEventListener('click', (e) => {
-                // Ignore clicks if the user was just dragging the element
                 if (!ticketEl.classList.contains('dragging')) {
                     openTicketDetails(ticket.id);
                 }
@@ -330,9 +333,12 @@ if (ticketForm) {
         const title = document.getElementById('title').value;
         const description = document.getElementById('description').value;
         const type_id = document.getElementById('ticketType').value;
+        const priority = document.getElementById('newPriority').value;
+        const sprint_id = parseInt(document.getElementById('newSprint').value);
+        const estimated_hours = parseFloat(document.getElementById('newEstimated').value);
 
         try {
-            await fetch(API_URL, {
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -341,20 +347,40 @@ if (ticketForm) {
                 body: JSON.stringify({
                     title,
                     description,
-                    type_id: type_id ? parseInt(type_id) : null
+                    type_id: type_id ? parseInt(type_id) : null,
+                    priority,
+                    sprint_id: sprint_id > 0 ? sprint_id : null,
+                    estimated_hours: estimated_hours || 0
                 })
             });
 
-            modal.classList.add('hidden');
-            ticketForm.reset();
-            const typeSelect = document.getElementById('ticketType');
-            if (typeSelect) {
-                typeSelect.disabled = true;
-                typeSelect.innerHTML = '<option value="" disabled selected>Escolha a categoria</option>';
+            if (response.ok) {
+                const newTicket = await response.json();
+                modal.classList.add('hidden');
+                ticketForm.reset();
+                const typeSelect = document.getElementById('ticketType');
+                if (typeSelect) {
+                    typeSelect.disabled = true;
+                    typeSelect.innerHTML = '<option value="" disabled selected>Escolha a categoria</option>';
+                }
+
+                // If new ticket is in a different sprint view, switch to it
+                const newTicketSprintId = newTicket.sprint_id || 0;
+                if (newTicketSprintId !== activeSprintId) {
+                    activeSprintId = newTicketSprintId;
+                    localStorage.setItem('active_sprint_id', activeSprintId);
+                    const sprintSelect = document.getElementById('sprintSelect');
+                    if (sprintSelect) sprintSelect.value = activeSprintId;
+                }
+
+                fetchTickets();
+            } else {
+                const errorData = await response.json().catch(() => ({ detail: 'Erro desconhecido' }));
+                alert(`Erro ao criar chamado: ${JSON.stringify(errorData.detail)}`);
             }
-            fetchTickets();
         } catch (error) {
             console.error("Error creating ticket:", error);
+            alert("Erro de conexão ou erro interno ao criar chamado. Verifique o console.");
         }
     });
 }
@@ -407,6 +433,47 @@ async function openTicketDetails(ticketId) {
             document.getElementById('tdmTitle').textContent = ticket.title;
             document.getElementById('tdmDescription').textContent = ticket.description;
 
+            // DevOps Fields Update (Editable)
+            const editPriority = document.getElementById('editPriority');
+            const editEstimated = document.getElementById('editEstimated');
+            const editSprint = document.getElementById('editSprint');
+            const devopsActions = document.getElementById('devopsActions');
+
+            if (editPriority && editEstimated && editSprint) {
+                editPriority.value = ticket.priority || 'Medium';
+                editEstimated.value = ticket.estimated_hours || 0;
+                
+                // Populate Sprint Options for this ticket modal
+                editSprint.innerHTML = '<option value="0">Backlog</option>';
+                allSprints.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.id;
+                    opt.textContent = s.name;
+                    if (ticket.sprint_id === s.id) opt.selected = true;
+                    editSprint.appendChild(opt);
+                });
+
+                devopsActions.classList.add('hidden'); // Hide save button initially
+
+                const showActions = () => devopsActions.classList.remove('hidden');
+                editPriority.onchange = showActions;
+                editEstimated.oninput = showActions;
+                editSprint.onchange = showActions;
+
+                document.getElementById('btnSaveDevops').onclick = async () => {
+                    await saveDevopsChanges(ticketId, {
+                        priority: editPriority.value,
+                        estimated_hours: parseFloat(editEstimated.value),
+                        sprint_id: parseInt(editSprint.value)
+                    });
+                    devopsActions.classList.add('hidden');
+                    openTicketDetails(ticketId); // Refresh UI
+                    fetchTickets(); // Refresh board
+                };
+            }
+
+            document.getElementById('tdmSpent').textContent = `${ticket.spent_hours}h`;
+
             // Meta Badges
             let metaHtml = `<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600">${ticket.status.name}</span>`;
             if (ticket.type) {
@@ -418,11 +485,107 @@ async function openTicketDetails(ticketId) {
             document.getElementById('tdmMeta').innerHTML = metaHtml;
 
             renderInteractions(ticket.interactions);
+
+            // Log Time Button
+            const btnLogTime = document.getElementById('btnLogTime');
+            btnLogTime.onclick = async () => {
+                const hours = parseFloat(document.getElementById('logHours').value);
+                const description = document.getElementById('logDesc').value;
+                if (isNaN(hours) || hours <= 0) return alert('Insira um tempo válido.');
+                
+                await logTime(ticketId, hours, description);
+                document.getElementById('logHours').value = '';
+                document.getElementById('logDesc').value = '';
+                openTicketDetails(ticketId); // Refresh details
+                fetchTickets(); // Refresh board
+            };
         }
     } catch (error) {
         console.error("Error fetching ticket details:", error);
     }
 }
+
+async function logTime(ticketId, hours, description) {
+    try {
+        const response = await fetch(`/api/tickets/${ticketId}/log-time`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${getToken()}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ hours, description })
+        });
+        if (!response.ok) alert('Erro ao registrar tempo.');
+    } catch (e) { console.error(e); }
+}
+
+async function saveDevopsChanges(ticketId, data) {
+    try {
+        const response = await fetch(`/api/tickets/${ticketId}`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${getToken()}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        if (!response.ok) alert('Erro ao salvar alterações.');
+    } catch (e) { console.error(e); }
+}
+
+async function initSprints() {
+    const sprintSelect = document.getElementById('sprintSelect');
+    const newSprintSelect = document.getElementById('newSprint');
+    if (!sprintSelect) return;
+
+    try {
+        const response = await fetch('/api/sprints', {
+            headers: { 'Authorization': `Bearer ${getToken()}` }
+        });
+        if (response.ok) {
+            allSprints = await response.json();
+            
+            const optionsHTML = '<option value="0">📊 Backlog</option>' + 
+                allSprints.map(s => `<option value="${s.id}">🎯 ${s.name}</option>`).join('');
+            
+            sprintSelect.innerHTML = optionsHTML;
+            if (activeSprintId > 0) sprintSelect.value = activeSprintId;
+
+            if (newSprintSelect) {
+                newSprintSelect.innerHTML = optionsHTML;
+            }
+
+            sprintSelect.addEventListener('change', (e) => {
+                activeSprintId = parseInt(e.target.value);
+                localStorage.setItem('active_sprint_id', activeSprintId);
+                fetchTickets();
+            });
+        }
+    } catch (e) { console.error(e); }
+}
+
+function updateSprintIndicator() {
+    const indicator = document.getElementById('activeSprintIndicator');
+    const nameEl = document.getElementById('activeSprintName');
+    if (!indicator || !nameEl) return;
+
+    if (activeSprintId === 0) {
+        indicator.classList.add('hidden');
+    } else {
+        const active = allSprints.find(s => s.id === activeSprintId);
+        if (active) {
+            indicator.classList.remove('hidden');
+            nameEl.textContent = active.name;
+        }
+    }
+}
+
+// Add initSprints to global load logic
+const originalFetchTickets = fetchTickets;
+fetchTickets = async function() {
+    if (allSprints.length === 0) await initSprints();
+    return originalFetchTickets();
+};
 
 // Publish openTicketDetails to global scope so it can be called from dynamically rendered HTML
 window.openTicketDetails = openTicketDetails;
